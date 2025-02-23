@@ -5,30 +5,23 @@ namespace App\Traits;
 trait ApiResponses
 {
     
-    protected function ok( string $message )
+    protected function ok( string $message, array $data )
     {
-        return $this->success($message, 200);
+        return $this->success($message, $data, 200);
     }
 
-    protected function success( string $message, int $statusCode = 200 )
+    protected function success( string $message, array $data, int $statusCode = 200 )
     {
         return response()->json([
+            'data' => $data,
             'message' => $message,
             'status' => $statusCode,
         ], $statusCode);
     }
 
-    protected function fail( string $message, int $statusCode = 400 )
+    protected function error($message, $statusCode)
     {
-        return response()->json([
-            'message' => $message,
-            'status' => $statusCode,
-        ], $statusCode);
+        return response()->json(['error' => $message, 'status' => $statusCode], $statusCode);
     }
 
-
-    protected function error($message, $code)
-    {
-        return response()->json(['error' => $message, 'code' => $code], $code);
-    }
 }
