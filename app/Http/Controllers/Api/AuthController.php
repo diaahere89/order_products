@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\LoginUserRequest;
 use App\Models\User;
 use App\Traits\V1\ApiResponses;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
@@ -17,11 +18,14 @@ class AuthController extends Controller
         $credentials = $request->only('email', 'password');
 
         if ( ! Auth::attempt($credentials)) {
-            return $this->error( 'Invalid credentials', 401 );
+            return $this->error( [
+                'email' => ['The provided credentials are incorrect.'],
+                'password' => ['The provided credentials are incorrect.'],
+            ], 401 );
         }
 
         $user  = User::firstWhere('email', $request->email);
-        $token = $user?->createToken('authToken')->plainTextToken;
+        $token = $user?->createToken('authToken', ['*'], now()->addHours(8))->plainTextToken;
         return $this->ok(
             'Authenticated',
             [
@@ -30,4 +34,10 @@ class AuthController extends Controller
             ],
         );
     }
+
+    public function logout( Request $request ) {
+        $request->user()->currentAccessToken()->delete();
+        return $this->ok('Logged out');
+    }
+
 }

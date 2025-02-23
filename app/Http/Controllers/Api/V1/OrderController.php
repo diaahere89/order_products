@@ -21,7 +21,8 @@ class OrderController extends ApiController
      */
     public function index( OrderFilter $filter )
     {
-        $orders = Order::where('user_id', Auth::id())->filter( $filter )->paginate();
+        //$orders = Order::where('user_id', Auth::id())->filter( $filter )->paginate();
+        $orders = Order::filter( $filter )->paginate();
         return response()->json( new OrderCollection($orders), Response::HTTP_OK );
     }
 
