@@ -28,7 +28,7 @@ class DatabaseSeeder extends Seeder
                 // Attach each product to the order with a random quantity between 1 and 11
                 $randomProducts->each(function ($product) use ($order) {
                     $quantity = rand(1, 11);  // Random quantity between 1 and 11
-                    $order->products()->attach($product->id, ['quantity' => $quantity]);
+                    $order->products()->attach($product->id, ['quantity' => $quantity, 'price' => $product->price]);
                 });
             }
         );

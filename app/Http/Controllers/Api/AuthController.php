@@ -5,8 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\LoginUserRequest;
 use App\Models\User;
-// use App\Http\Requests\Api\V1\ApiLoginRequest;
-use App\Traits\ApiResponses;
+use App\Traits\V1\ApiResponses;
 use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
