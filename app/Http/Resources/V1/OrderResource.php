@@ -21,23 +21,32 @@ class OrderResource extends JsonResource
             'id' => $this->id,
             'attributes' => [
                 'name' => $this->name,
-                'description' => $this->description,
+                $this->mergeWhen(
+                    $request->routeIs('orders.show'),
+                    [
+                        'description' => $this->description,
+                    ]
+                ),
                 'status' => $this->status,
                 'date' => $this->date,
             ],
             'relationships' => [
                 'products' => $this->products,
-                'owner' => [
-                    'data' => [
-                        'type' => 'user',
-                        'id' => $this->user->id,
-                        'attributes' => $this->user->only(['name', 'email']),
-                    ],
-                    'links' => [
-                        'self' => 'todo', // route('users.show', ['user' => $this->user->id]),
-                    ]
-                ],
             ],
+            'includes' => $this->whenLoaded('user', 
+                [
+                    'owner' => [
+                        'data' => [
+                            'type' => 'user',
+                            'id' => $this->user->id,
+                            'attributes' => $this->user->only(['name', 'email']),
+                        ],
+                        'links' => [
+                            'self' => 'todo', // route('users.show', ['user' => $this->user->id]),
+                        ]
+                    ],
+                ],
+            ),
             'links' => [
                 'self' => route('orders.show', ['order' => $this->id]),
             ],

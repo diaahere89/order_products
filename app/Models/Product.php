@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class Product extends Model
 {
@@ -16,7 +17,7 @@ class Product extends Model
     {
         return $this->belongsToMany(Order::class, 'order_product')
             ->whereHas('user', function ($query) {
-                $query->where('id', auth()->id());
+                $query->where('id', Auth::id());
             })
             ->withPivot('quantity')
             ->withTimestamps();
