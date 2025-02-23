@@ -6,10 +6,10 @@ use App\Http\Controllers\Controller;
 
 class ApiController extends Controller
 {
-    public function includes( string $relationships ): bool
+    public function include( string $relationships ): bool
     {
         $param = request()->query('include');
-        
+
         if (is_null($param)) {
             return false;
         }

@@ -33,20 +33,23 @@ class OrderResource extends JsonResource
             'relationships' => [
                 'products' => $this->products,
             ],
-            'includes' => $this->whenLoaded('user', 
-                [
-                    'owner' => [
-                        'data' => [
-                            'type' => 'user',
-                            'id' => $this->user->id,
-                            'attributes' => $this->user->only(['name', 'email']),
+            $this->mergeWhen($this->relationLoaded('user'), [
+                'includes' => $this->whenLoaded('user', 
+                    [
+                        'owner' => [
+                            'data' => [
+                                'type' => 'user',
+                                'id' => $this->user->id,
+                                'attributes' => $this->user->only(['name', 'email']),
+                            ],
+                            'links' => [
+                                'self' => 'todo', // route('users.show', ['user' => $this->user->id]),
+                            ]
                         ],
-                        'links' => [
-                            'self' => 'todo', // route('users.show', ['user' => $this->user->id]),
-                        ]
                     ],
-                ],
-            ),
+                ),
+            ]),
+            // 'includes' => $this->whenLoaded('user'),
             'links' => [
                 'self' => route('orders.show', ['order' => $this->id]),
             ],
