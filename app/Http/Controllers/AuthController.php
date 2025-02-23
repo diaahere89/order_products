@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\ApiLoginRequest;
+use App\Http\Requests\Api\V1\ApiLoginRequest;
 use App\Traits\ApiResponses;
 
 class AuthController extends Controller

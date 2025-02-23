@@ -8,6 +8,8 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
+// http://localhost:2202/api/v1/orders/{id}
+// universal resource locator 
 
 Route::get('/', function () {
     return response()->json([
@@ -17,3 +19,8 @@ Route::get('/', function () {
 });
 
 Route::post('/login', [AuthController::class, 'login']);
+
+// Versioned API routes
+Route::prefix('v1')->group(function () {
+    require __DIR__.'/api_v1.php';
+});
