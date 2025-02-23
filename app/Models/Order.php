@@ -12,7 +12,7 @@ class Order extends Model
     /** @use HasFactory<\Database\Factories\OrderFactory> */
     use HasFactory;
 
-    protected $fillable = ['name', 'description', 'date', 'status'];
+    protected $fillable = ['name', 'description', 'date', 'status', 'user_id'];
 
     public function user()
     {

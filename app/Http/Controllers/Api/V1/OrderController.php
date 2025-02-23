@@ -8,21 +8,19 @@ use App\Http\Requests\Api\V1\UpdateOrderRequest;
 use App\Http\Resources\V1\OrderCollection;
 use App\Http\Resources\V1\OrderResource;
 use App\Models\Order;
+use App\Models\User;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Response;
-use App\Traits\V1\ApiResponses;
 use Illuminate\Support\Facades\Auth;
 
 class OrderController extends ApiController
 {
-    use ApiResponses;
-
     /**
      * Display a listing of the resource.
      */
     public function index( OrderFilter $filter )
     {
-        //$orders = Order::where('user_id', Auth::id())->filter( $filter )->paginate();
-        $orders = Order::filter( $filter )->paginate();
+        $orders = Order::where('user_id', Auth::id())->filter( $filter )->paginate();
         return response()->json( new OrderCollection($orders), Response::HTTP_OK );
     }
 
@@ -31,7 +29,30 @@ class OrderController extends ApiController
      */
     public function store(StoreOrderRequest $request)
     {
-        //
+        try {
+            $user = User::findOrFail( $request->input('data.attributes.user_id') );
+        } catch (ModelNotFoundException $e) {
+            return $this->ok( 'User not found', [
+                'errors' => ['The provided user id does not exist'],
+                'status' => Response::HTTP_NOT_FOUND
+            ]);
+        }
+
+        $model = [
+            'name' => $request->input('data.attributes.name'),
+            'description' => $request->input('data.attributes.description'),
+            'status' => $request->input('data.attributes.status'),
+            'date' => $request->input('data.attributes.date'),
+            'user_id' => $request->input('data.attributes.user_id'),
+            'products' => $request->input('data.relationships.products'),
+        ];
+        $products = $request->input('data.relationships.products');
+        
+        $order = Order::create($model);
+        foreach ($products as $product) {
+            $order->products()->attach($product['id'], ['quantity' => $product['quantity'], 'price' => $product['price']]);
+        }
+        return response()->json( new OrderResource($order), Response::HTTP_CREATED );
     }
 
     /**
@@ -39,7 +60,6 @@ class OrderController extends ApiController
      */
     public function show(Order $order)
     {
-
         if ($order->user_id !== Auth::id()) {
             return $this->error( 'Unauthorized', Response::HTTP_UNAUTHORIZED );
         } else if ( $this->include('user') ) {
@@ -64,6 +84,6 @@ class OrderController extends ApiController
      */
     public function destroy(Order $order)
     {
-        //
+        return $this->error( 'Not implemented', Response::HTTP_NOT_IMPLEMENTED );
     }
 }

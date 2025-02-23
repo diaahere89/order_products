@@ -6,6 +6,8 @@ import Login from './pages/auth/login';
 import { useContext } from 'react';
 import { AppContext } from './context/context';
 import Orders from './pages/orders/index';
+import CreateOrder from './pages/orders/create';
+import ShowOrder from './pages/orders/show';
 
 export default function App() {
   const { user } = useContext(AppContext);
@@ -17,7 +19,9 @@ export default function App() {
         <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />
           <Route path='/orders' element={ user ? <Orders /> : <Login /> } />
+          <Route path='/orders/create' element={ user ? <CreateOrder /> : <Login /> } />
           <Route path='/login' element={ user ? <Home /> : <Login /> } />
+          <Route path='/orders/:id' element={ user ? <ShowOrder /> : <Login /> } />
         </Route>
       </Routes>
     </BrowserRouter>
