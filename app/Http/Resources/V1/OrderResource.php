@@ -21,12 +21,7 @@ class OrderResource extends JsonResource
             'id' => $this->id,
             'attributes' => [
                 'name' => $this->name,
-                $this->mergeWhen(
-                    $request->routeIs('orders.show'),
-                    [
-                        'description' => $this->description,
-                    ]
-                ),
+                'description' => $this->description,
                 'status' => $this->status,
                 'date' => $this->date,
             ],
