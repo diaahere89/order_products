@@ -43,7 +43,7 @@ export default function CreateOrder() {
         }, 0);
     };
 
-    //const [errors, setErrors] = useState({});
+    const [errors, setErrors] = useState({});
     const navigate = useNavigate();
 
     async function handleCreateOrder(e) {
@@ -91,6 +91,7 @@ export default function CreateOrder() {
             navigate('/orders');
         } else {
             console.log(data.errors);
+            setErrors(data.errors);
         }
     };
 
@@ -156,6 +157,18 @@ export default function CreateOrder() {
                             )}
 
                         <button type="submit" className="btn primary-btn">Create Order</button>
+
+                        {Object.keys(errors).length > 0 && (
+                            <div className="mt-4 text-red-500">
+                                {Object.keys(errors).map((key) => (
+                                    <div key={key}>
+                                        {errors[key].map((error, index) => (
+                                            <p key={index}>{error}</p>
+                                        ))}
+                                    </div>
+                                ))}
+                            </div>
+                        )}
                     </form>
                 </div>
 

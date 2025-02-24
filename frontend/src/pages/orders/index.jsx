@@ -20,7 +20,8 @@ export default function Orders () {
         }
         
         if (res.ok) {
-            setOrders(data.data);
+            const list = data.data.sort((a, b) => b.id - a.id);
+            setOrders(list);
         }
     }
 
