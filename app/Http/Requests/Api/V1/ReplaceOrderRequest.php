@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests\Api\V1;
 
-class StoreOrderRequest extends BaseOrderRequest
+class ReplaceOrderRequest extends BaseOrderRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -32,5 +32,6 @@ class StoreOrderRequest extends BaseOrderRequest
             'data.relationships.products.*.price' => 'required|numeric|min:0',
         ];
     }
+
 
 }

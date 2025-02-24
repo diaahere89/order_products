@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Filters\V1\OrderFilter;
+use App\Http\Requests\Api\V1\ReplaceOrderRequest;
 use App\Http\Requests\Api\V1\StoreOrderRequest;
 use App\Http\Requests\Api\V1\UpdateOrderRequest;
 use App\Http\Resources\V1\OrderCollection;
@@ -38,17 +39,9 @@ class OrderController extends ApiController
             ]);
         }
 
-        $model = [
-            'name' => $request->input('data.attributes.name'),
-            'description' => $request->input('data.attributes.description'),
-            'status' => $request->input('data.attributes.status'),
-            'date' => $request->input('data.attributes.date'),
-            'user_id' => $request->input('data.attributes.user_id'),
-            'products' => $request->input('data.relationships.products'),
-        ];
-        $products = $request->input('data.relationships.products');
+        $order = Order::create($request->mappedAttributes());
         
-        $order = Order::create($model);
+        $products = $request->input('data.relationships.products');
         foreach ($products as $product) {
             $order->products()->attach($product['id'], ['quantity' => $product['quantity'], 'price' => $product['price']]);
         }
@@ -80,10 +73,65 @@ class OrderController extends ApiController
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateOrderRequest $request, Order $order)
+    public function update(UpdateOrderRequest $request, $order_id)
     {
-        //
+        // PATCH
+        try {
+            $order = Order::findOrFail($order_id);
+        } catch (ModelNotFoundException $e) {
+            return $this->error( 'Order not found', [
+                'errors' => ['Order does not exist'],
+                'status' => Response::HTTP_NOT_FOUND
+            ]);
+        }
+
+        if ( $order->user_id !== Auth::id() || $order->user_id !== $request->input('data.attributes.user_id') ) {
+            return $this->error( 'Unauthorized', Response::HTTP_UNAUTHORIZED );
+        }
+
+        $order->update($request->mappedAttributes());
+        
+        $products = $request->input('data.relationships.products');
+        if ( $products ) {
+            $order->products()->detach();
+            foreach ($products as $product) {
+                $order->products()->attach($product['id'], ['quantity' => $product['quantity'], 'price' => $product['price']]);
+            }
+        }
+
+        return response()->json( new OrderResource($order), Response::HTTP_OK );
     }
+
+    /**
+     * Replace the specified resource in storage.
+     */
+    public function replace(ReplaceOrderRequest $request, $order_id)
+    {
+        // PUT
+        try {
+            $order = Order::findOrFail($order_id);
+        } catch (ModelNotFoundException $e) {
+            return $this->error( 'Order not found', [
+                'errors' => ['Order does not exist'],
+                'status' => Response::HTTP_NOT_FOUND
+            ]);
+        }
+
+        if ( $order->user_id !== Auth::id() || $order->user_id !== $request->input('data.attributes.user_id') ) {
+            return $this->error( 'Unauthorized', Response::HTTP_UNAUTHORIZED );
+        }
+
+        $order->update($request->mappedAttributes());
+
+        $products = $request->input('data.relationships.products');
+        $order->products()->detach();
+        foreach ($products as $product) {
+            $order->products()->attach($product['id'], ['quantity' => $product['quantity'], 'price' => $product['price']]);
+        }
+
+        return response()->json( new OrderResource($order), Response::HTTP_OK );
+    }
+
 
     /**
      * Remove the specified resource from storage.
@@ -102,7 +150,5 @@ class OrderController extends ApiController
                 'status' => Response::HTTP_NOT_FOUND
             ]);
         }
-
-        //return $this->error( 'Not implemented ' . $order_id , Response::HTTP_NOT_IMPLEMENTED );
     }
 }

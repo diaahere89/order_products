@@ -2,9 +2,7 @@
 
 namespace App\Http\Requests\Api\V1;
 
-use Illuminate\Foundation\Http\FormRequest;
-
-class UpdateOrderRequest extends FormRequest
+class UpdateOrderRequest extends BaseOrderRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,7 +20,16 @@ class UpdateOrderRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'data.attributes.user_id' => 'required|exists:users,id',
+            'data.attributes.name' => 'sometimes|string',
+            'data.attributes.description' => 'sometimes|string',
+            'data.attributes.status' => 'sometimes|string|in:P,F,C',
+            'data.attributes.date' => 'sometimes|date',
+            'data.relationships.products' => 'sometimes|array',
+            'data.relationships.products.*' => 'array',
+            'data.relationships.products.*.id' => 'sometimes|exists:products,id',
+            'data.relationships.products.*.quantity' => 'sometimes|integer|min:1',
+            'data.relationships.products.*.price' => 'sometimes|numeric|min:0',
         ];
     }
 }
