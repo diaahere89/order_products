@@ -20,6 +20,10 @@ class ReplaceOrderRequest extends BaseOrderRequest
     public function rules(): array
     {
         return [
+            'data' => 'required|array',
+            'data.attributes' => 'required|array',
+            'data.relationships' => 'required|array',
+
             'data.attributes.user_id' => 'required|exists:users,id',
             'data.attributes.name' => 'required|string',
             'data.attributes.description' => 'required|string',

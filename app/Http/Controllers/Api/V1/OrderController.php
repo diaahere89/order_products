@@ -10,12 +10,16 @@ use App\Http\Resources\V1\OrderCollection;
 use App\Http\Resources\V1\OrderResource;
 use App\Models\Order;
 use App\Models\User;
+use App\Policies\V1\OrderPolicy;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 
 class OrderController extends ApiController
 {
+    protected $policyClass = OrderPolicy::class;
+
     /**
      * Display a listing of the resource.
      */
@@ -55,19 +59,20 @@ class OrderController extends ApiController
     {
         try {
             $order = Order::findOrFail($order_id);
-        } catch (ModelNotFoundException $e) {
+            $this->isAble('view', $order); //policy
+
+            if ( $this->include('user') ) {
+                $order->load('user');
+            }
+            
+            $order->load('products');
+    
+            return response()->json( new OrderResource($order), Response::HTTP_OK );
+        } catch (ModelNotFoundException $eModelNotFound) {
             return $this->error( 'Order not found', Response::HTTP_NOT_FOUND );
+        } catch (AuthorizationException $eAuthorizationException) {
+            return $this->error( 'You are not authorized', Response::HTTP_UNAUTHORIZED );
         }
-
-        if ($order->user_id !== Auth::id()) {
-            return $this->error( 'Unauthorized', Response::HTTP_UNAUTHORIZED );
-        } else if ( $this->include('user') ) {
-            $order->load('user');
-        }
-        
-        $order->load('products');
-
-        return response()->json( new OrderResource($order), Response::HTTP_OK );
     }
 
     /**
@@ -78,28 +83,29 @@ class OrderController extends ApiController
         // PATCH
         try {
             $order = Order::findOrFail($order_id);
-        } catch (ModelNotFoundException $e) {
+
+            $this->isAble('update', $order); //policy
+    
+            $order->update($request->mappedAttributes());
+            
+            $products = $request->input('data.relationships.products');
+            if ( $products ) {
+                $order->products()->detach();
+                foreach ($products as $product) {
+                    $order->products()->attach($product['id'], ['quantity' => $product['quantity'], 'price' => $product['price']]);
+                }
+            }
+    
+            return response()->json( new OrderResource($order), Response::HTTP_OK );
+        } catch (ModelNotFoundException $eModelNotFound) {
             return $this->error( 'Order not found', [
                 'errors' => ['Order does not exist'],
                 'status' => Response::HTTP_NOT_FOUND
             ]);
+        } catch (AuthorizationException $eAuthorizationException) {
+            return $this->error( 'You are not authorized', Response::HTTP_UNAUTHORIZED );
         }
 
-        if ( $order->user_id !== Auth::id() || $order->user_id !== $request->input('data.attributes.user_id') ) {
-            return $this->error( 'Unauthorized', Response::HTTP_UNAUTHORIZED );
-        }
-
-        $order->update($request->mappedAttributes());
-        
-        $products = $request->input('data.relationships.products');
-        if ( $products ) {
-            $order->products()->detach();
-            foreach ($products as $product) {
-                $order->products()->attach($product['id'], ['quantity' => $product['quantity'], 'price' => $product['price']]);
-            }
-        }
-
-        return response()->json( new OrderResource($order), Response::HTTP_OK );
     }
 
     /**
@@ -110,26 +116,25 @@ class OrderController extends ApiController
         // PUT
         try {
             $order = Order::findOrFail($order_id);
-        } catch (ModelNotFoundException $e) {
+            $this->isAble('update', $order); //policy
+
+            $order->update($request->mappedAttributes());
+    
+            $products = $request->input('data.relationships.products');
+            $order->products()->detach();
+            foreach ($products as $product) {
+                $order->products()->attach($product['id'], ['quantity' => $product['quantity'], 'price' => $product['price']]);
+            }
+    
+            return response()->json( new OrderResource($order), Response::HTTP_OK );
+        } catch (ModelNotFoundException $eModelNotFound) {
             return $this->error( 'Order not found', [
                 'errors' => ['Order does not exist'],
                 'status' => Response::HTTP_NOT_FOUND
             ]);
+        } catch (AuthorizationException $eAuthorizationException) {
+            return $this->error( 'You are not authorized', Response::HTTP_UNAUTHORIZED );
         }
-
-        if ( $order->user_id !== Auth::id() || $order->user_id !== $request->input('data.attributes.user_id') ) {
-            return $this->error( 'Unauthorized', Response::HTTP_UNAUTHORIZED );
-        }
-
-        $order->update($request->mappedAttributes());
-
-        $products = $request->input('data.relationships.products');
-        $order->products()->detach();
-        foreach ($products as $product) {
-            $order->products()->attach($product['id'], ['quantity' => $product['quantity'], 'price' => $product['price']]);
-        }
-
-        return response()->json( new OrderResource($order), Response::HTTP_OK );
     }
 
 
@@ -140,15 +145,18 @@ class OrderController extends ApiController
     {
         try {
             $order = Order::findOrFail($order_id);
+            $this->isAble('delete', $order); //policy
             $order->delete();
             return $this->ok( 'Order deleted successfully', [
                 'status' => Response::HTTP_OK
             ]);
-        } catch (ModelNotFoundException $e) {
+        } catch (ModelNotFoundException $eModelNotFound) {
             return $this->error( 'Order not found', [
                 'errors' => ['Order does not exist'],
                 'status' => Response::HTTP_NOT_FOUND
             ]);
+        } catch (AuthorizationException $eAuthorizationException) {
+            return $this->error( 'You are not authorized', Response::HTTP_UNAUTHORIZED );
         }
     }
 }

@@ -20,6 +20,10 @@ class UpdateOrderRequest extends BaseOrderRequest
     public function rules(): array
     {
         return [
+            'data' => 'required|array',
+            'data.attributes' => 'sometimes|array',
+            'data.relationships' => 'sometimes|array',
+
             'data.attributes.user_id' => 'required|exists:users,id',
             'data.attributes.name' => 'sometimes|string',
             'data.attributes.description' => 'sometimes|string',
