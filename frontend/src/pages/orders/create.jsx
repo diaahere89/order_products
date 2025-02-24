@@ -11,29 +11,43 @@ export default function CreateOrder() {
         status: "",
         date: "",
         purchasedProducts: {},
+        stock: products.reduce((acc, product) => {
+            acc[product.id] = product.attributes.stock; 
+            return acc;
+        }, {})
     });
 
     const handleAddProduct = (product) => {
         setFormData((prev) => {
             const updatedProducts = { ...prev.purchasedProducts };
-            if (updatedProducts[product.id]) {
-                updatedProducts[product.id].quantity += 1;
-            } else {
-                updatedProducts[product.id] = { ...product, quantity: 1 };
+            const updatedStock = { ...prev.stock };
+            if (updatedStock[product.id] > 0) {
+                if (updatedProducts[product.id]) {
+                    updatedProducts[product.id].quantity += 1;
+                } else {
+                    updatedProducts[product.id] = { ...product, quantity: 1 };
+                }
+                updatedStock[product.id] -= 1;
             }
-            return { ...prev, purchasedProducts: updatedProducts };
+            return { ...prev, purchasedProducts: updatedProducts, stock: updatedStock };
         });
     };
 
     const handleQuantityChange = (productId, newQuantity) => {
         setFormData((prev) => {
             const updatedProducts = { ...prev.purchasedProducts };
+            const updatedStock = { ...prev.stock };
             if (newQuantity > 0) {
-                updatedProducts[productId].quantity = newQuantity;
+                const diff = newQuantity - (updatedProducts[productId]?.quantity || 0);
+                if (updatedStock[productId] - diff >= 0) {
+                    updatedProducts[productId].quantity = newQuantity;
+                    updatedStock[productId] -= diff;
+                }
             } else {
+                updatedStock[productId] += updatedProducts[productId]?.quantity || 0;
                 delete updatedProducts[productId];
             }
-            return { ...prev, purchasedProducts: updatedProducts };
+            return { ...prev, purchasedProducts: updatedProducts, stock: updatedStock };
         });
     };
 
@@ -105,7 +119,7 @@ export default function CreateOrder() {
 
                 {/* Form Section */}
                 <div className="w-1/2">
-                    <h1 className="title">Create Order</h1>
+                    <h1 className="title">Make an Order</h1>
                     <form onSubmit={handleCreateOrder} className="space-y-5">
                         <div>
                             <label htmlFor="name">Name</label>
@@ -136,7 +150,7 @@ export default function CreateOrder() {
                                     {Object.values(formData.purchasedProducts).map((product) => (
                                         <>
                                             <div key={product.id} className="flex items-center justify-between border p-2 rounded">
-                                                <span>{product.attributes.name} - ${product.attributes.price}</span>
+                                                <span>{product.attributes.name} - €{product.attributes.price}</span>
                                                 <input
                                                     type="number"
                                                     min="0"
@@ -181,8 +195,9 @@ export default function CreateOrder() {
                             <div key={product.id} className="border p-3 rounded-lg flex flex-col justify-between">
                                 <div>
                                     <h4>{ucwords(product.attributes.name)}</h4>
+                                    <p>Stock: {formData.stock[product.id]}</p>
                                 </div>
-                                <button onClick={() => handleAddProduct(product)} className="btn btn-sm mt-2 primary-btn flex items-center justify-center">
+                                <button onClick={() => handleAddProduct(product)} className="btn btn-sm mt-2 primary-btn flex items-center justify-center" disabled={formData.stock[product.id] <= 0}>
                                     <span className="material-icons">Buy &nbsp; {product.attributes.price} €</span>
                                 </button>
                             </div>

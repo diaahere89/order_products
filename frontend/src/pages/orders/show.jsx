@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { AppContext } from "../../context/context";
 import { Link } from 'react-router-dom';
 
@@ -7,6 +7,7 @@ export default function ShowOrder() {
     const { id } = useParams();
     const { token } = useContext(AppContext);
     const [ order, setOrder ] = useState(null);
+    const navigate = useNavigate();
 
     async function getOrder() {
         const res = await fetch(`/api/v1/orders/${id}`, {
@@ -72,6 +73,10 @@ export default function ShowOrder() {
         
         const data = await res.json();
         console.log(data);
+
+        if (res.ok) {
+            navigate('/orders');
+        }
     }
 
     return (

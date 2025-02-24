@@ -58,8 +58,14 @@ class OrderController extends ApiController
     /**
      * Display the specified resource.
      */
-    public function show(Order $order)
+    public function show($order_id)
     {
+        try {
+            $order = Order::findOrFail($order_id);
+        } catch (ModelNotFoundException $e) {
+            return $this->error( 'Order not found', Response::HTTP_NOT_FOUND );
+        }
+
         if ($order->user_id !== Auth::id()) {
             return $this->error( 'Unauthorized', Response::HTTP_UNAUTHORIZED );
         } else if ( $this->include('user') ) {
@@ -82,8 +88,21 @@ class OrderController extends ApiController
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Order $order)
+    public function destroy($order_id)
     {
-        return $this->error( 'Not implemented', Response::HTTP_NOT_IMPLEMENTED );
+        try {
+            $order = Order::findOrFail($order_id);
+            $order->delete();
+            return $this->ok( 'Order deleted successfully', [
+                'status' => Response::HTTP_OK
+            ]);
+        } catch (ModelNotFoundException $e) {
+            return $this->error( 'Order not found', [
+                'errors' => ['Order does not exist'],
+                'status' => Response::HTTP_NOT_FOUND
+            ]);
+        }
+
+        //return $this->error( 'Not implemented ' . $order_id , Response::HTTP_NOT_IMPLEMENTED );
     }
 }

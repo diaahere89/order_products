@@ -43,6 +43,10 @@ export default function Orders () {
         
         const data = await res.json();
         console.log(data);
+
+        if (res.ok) {
+            getOrders();
+        }
     }
 
 
