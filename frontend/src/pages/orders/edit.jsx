@@ -45,12 +45,15 @@ export default function UpdateOrder() {
                 description: data.attributes.description,
                 status: data.attributes.status,
                 date: data.attributes.date,
-                purchasedProducts: Object.values(data?.relationships?.products || {}).map((product) => ({
-                    id: product.id,
-                    name: product.name,
-                    quantity: product.pivot.quantity,
-                    price: product.price,
-                })),
+                purchasedProducts: Object.values(data?.relationships?.products || {}).reduce((acc, product) => {
+                    acc[product.id] = {
+                        id: product.id,
+                        name: product.name,
+                        quantity: product.pivot.quantity,
+                        price: product.price,
+                    };
+                    return acc;
+                }, {}),
                 stock: products?.reduce((acc, product) => {
                     acc[product.id] = product.attributes.stock;
                     return acc;
@@ -86,6 +89,10 @@ export default function UpdateOrder() {
         setFormData((prev) => {
             const updatedProducts = { ...prev.purchasedProducts };
             const updatedStock = { ...prev.stock };
+
+            console.log('productId', productId)
+            console.log('updatedProducts', updatedProducts)
+            console.log('newQuantity', newQuantity)
             if (newQuantity > 0) {
                 const diff = newQuantity - (updatedProducts[productId]?.quantity || 0);
                 if (updatedStock[productId] - diff >= 0) {
@@ -102,7 +109,7 @@ export default function UpdateOrder() {
 
     const calculateTotal = () => {
         return Object.values(formData.purchasedProducts).reduce((total, product) => {
-            return total + product.attributes.price * product.quantity;
+            return total + product.price * product.quantity;
         }, 0);
     };
 
@@ -194,33 +201,33 @@ export default function UpdateOrder() {
                             <input type="date" id="date" value={formData.date} onChange={(e) => setFormData({ ...formData, date: e.target.value })} required />
                         </div>
 
-                            {/* Added Products Section 
                             <h3 className="text-lg font-bold mt-6">Added Products</h3>
+                            {/* Added Products Section */}
                             {Object.values(formData.purchasedProducts).length > 0 ? (
-                                <div className="space-y-3">
+                                <div key={id} className="space-y-3">
                                     {Object.values(formData.purchasedProducts).map((product) => (
                                         <>
-                                            <div key={product.id} className="flex items-center justify-between border p-2 rounded">
-                                                <span>{product.attributes.name} - €{product.attributes.price}</span>
+                                            <div key={product.id} className="flex items-left justify-between border p-2 rounded">
+                                                <span className="flex text-left">€{product.price}</span>
                                                 <input
                                                     type="number"
                                                     min="0"
                                                     value={product.quantity}
                                                     onChange={(e) => handleQuantityChange(product.id, parseInt(e.target.value) || 0)}
-                                                    className="w-16 text-center border rounded"
+                                                    className="w-16 text-left border rounded"
                                                 />
+                                                <span>{product.name}</span>
                                                 <button onClick={() => handleQuantityChange(product.id, 0)} className="btn btn-sm btn-danger">Remove</button>
                                             </div>
                                         </>
                                     ))}
-                                    <div className="text-right font-bold">
+                                    <div className="text-left font-bold">
                                         Total: €{calculateTotal().toFixed(2)}
                                     </div>
                                 </div>
                             ) : (
                                 <p>No products added.</p>
                             )}
-                            */}
 
                         <div className="flex gap-2 justify-between items-center mb-4 space-x-2">
                             <Link to={`/orders/${id}`} className="text-red-500 flex items-center space-x-1">Cancel</Link>
@@ -241,7 +248,7 @@ export default function UpdateOrder() {
                     </form>
                 </div>
 
-                {/* Products Section 
+                {/* Products Section */}
                 <div className="w-1/2">
                     <h1 className="title text-lg font-bold">Select Products</h1>
 
@@ -252,14 +259,18 @@ export default function UpdateOrder() {
                                     <h4>{ucwords(product.attributes.name)}</h4>
                                     <p>Stock: {formData.stock[product.id]}</p>
                                 </div>
-                                <button onClick={() => handleAddProduct(product)} className="btn btn-sm mt-2 primary-btn flex items-center justify-center" disabled={formData.stock[product.id] <= 0}>
+                                <button onClick={() => handleAddProduct({
+                                    id: product.id,
+                                    name: product.attributes.name,
+                                    price: product.attributes.price,
+                                    quantity: 1
+                                })} className="btn btn-sm mt-2 primary-btn flex items-center justify-center" disabled={formData.stock[product.id] <= 0}>
                                     <span className="material-icons">Buy &nbsp; {product.attributes.price} €</span>
                                 </button>
                             </div>
                         ))}
                     </div>
                 </div>
-                */}
 
             </div>
         </>

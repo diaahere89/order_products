@@ -150,19 +150,20 @@ export default function CreateOrder() {
                                     {Object.values(formData.purchasedProducts).map((product) => (
                                         <>
                                             <div key={product.id} className="flex items-center justify-between border p-2 rounded">
-                                                <span>{product.attributes.name} - €{product.attributes.price}</span>
+                                                <span className="flex text-left">€{product.attributes.price}</span>
                                                 <input
                                                     type="number"
                                                     min="0"
                                                     value={product.quantity}
                                                     onChange={(e) => handleQuantityChange(product.id, parseInt(e.target.value) || 0)}
-                                                    className="w-16 text-center border rounded"
+                                                    className="flex w-16 text-center border rounded"
                                                 />
+                                                <span> &nbsp; {product.attributes.name}</span>
                                                 <button onClick={() => handleQuantityChange(product.id, 0)} className="btn btn-sm btn-danger">Remove</button>
                                             </div>
                                         </>
                                     ))}
-                                    <div className="text-right font-bold">
+                                    <div className="text-left font-bold">
                                         Total: €{calculateTotal().toFixed(2)}
                                     </div>
                                 </div>
