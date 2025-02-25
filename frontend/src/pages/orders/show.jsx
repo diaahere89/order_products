@@ -5,12 +5,12 @@ import { Link } from 'react-router-dom';
 
 export default function ShowOrder() {
     const { id } = useParams();
-    const { token } = useContext(AppContext);
+    const { token, user } = useContext(AppContext);
     const [ order, setOrder ] = useState(null);
     const navigate = useNavigate();
 
     async function getOrder() {
-        const res = await fetch(`/api/v1/orders/${id}`, {
+        const res = await fetch(`/api/v1/orders/${id}?include=user`, {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -26,6 +26,9 @@ export default function ShowOrder() {
         }
         
         if (res.ok) {
+            if ( data.includes.owner.data.id !== user.id ) {
+                navigate('/orders');
+            }
             setOrder(data);
         }
     }
