@@ -5,6 +5,22 @@ import { Link } from 'react-router-dom';
 export default function Orders () {
     const { token } = useContext(AppContext);
     const [ orders, setOrders ] = useState([]);
+    const [ filterOrder, setFilterOrder ] = useState('');
+    const [ filterProducts, setFilterProducts ] = useState('');
+    const [ filterStatus, setFilterStatus ] = useState('all');
+    const [ filterDate, setFilterDate ] = useState('');
+    const [ filterDateTo, setFilterDateTo ] = useState('');
+
+    const restoreFilters = () => {
+        setFilterOrder('');
+        setFilterProducts('');
+        setFilterStatus('all');
+        setFilterDate('');
+        setFilterDateTo('');
+        document.querySelectorAll('input[type="text"]').forEach(input => input.value = '');
+        document.querySelectorAll('input[type="date"]').forEach(input => input.value = '');
+        document.querySelectorAll('select').forEach(select => select.selectedIndex = 0);
+    };
 
     async function getOrders() {
         const res = await fetch('/api/v1/orders', {
@@ -77,11 +93,11 @@ export default function Orders () {
 
     return (
       <>
-        <h1 className="title">List of Orders !</h1>
+        <h1 className="title">Your Orders</h1>
         <div className="filters border border-spacing-4 border-gray-200 rounded-lg p-4">
             <div className="flex justify-between items-center mb-4">
                 <h2 className="text-lg font-bold">Filters</h2>
-                <button onClick={getOrders} className="btn btn-primary">Reset</button>
+                <button onClick={ restoreFilters } className="btn btn-primary">Reset</button>
             </div>
             <div className="flex">
                 <div className="flex flex-col gap-2">
@@ -91,20 +107,7 @@ export default function Orders () {
                     <input 
                         type="text" 
                         placeholder="Search by product name or description" 
-                        onChange={(e) => {
-                            e.preventDefault();
-                            const searchTerm = e.target.value;
-                            
-                            if (searchTerm.trim() !== '') {
-                                setOrders(prevOrders => prevOrders.filter(order => 
-                                    order.attributes.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                                    order.attributes.description.toLowerCase().includes(searchTerm.toLowerCase())
-                                ));
-                            } else {
-                                getOrders();
-                                return;
-                            }
-                        }} 
+                        onChange={ (e) => setFilterOrder(e.target.value) } 
                         className="input input-bordered w-full max-w-xs mb-4"
                     />
                 </div>
@@ -115,22 +118,7 @@ export default function Orders () {
                     <input 
                         type="text" 
                         placeholder="Search by product name or description" 
-                        onChange={(e) => {
-                            e.preventDefault();
-                            const searchTerm = e.target.value;
-                            
-                            if (searchTerm.trim() !== '') {
-                                setOrders(prevOrders => prevOrders.filter(order => 
-                                    order.relationships.products.some(product => 
-                                        product.name.toLowerCase().includes(searchTerm.toLowerCase()) 
-                                        // || product.description.toLowerCase().includes(searchTerm.toLowerCase())
-                                    )
-                                ));
-                            } else {
-                                getOrders();
-                                return;
-                            }
-                        }} 
+                        onChange={ (e) => setFilterProducts(e.target.value) } 
                         className="input input-bordered w-full max-w-xs mb-4"
                     />
                 </div>
@@ -139,15 +127,7 @@ export default function Orders () {
                         <span className="label-text">Filter by status</span>
                     </label>
                     <select
-                        onChange={(e) => {
-                            e.preventDefault();
-                            const status = e.target.value;
-                            if (status === 'all') {
-                                getOrders();
-                                return;
-                            }
-                            setOrders(prevOrders => prevOrders.filter(order => order.attributes.status === status));
-                        }}
+                        onChange={ (e) => setFilterStatus(e.target.value) } 
                         className="select select-bordered w-full max-w-xs">
                             <option value="all">All</option>
                             <option value="F">Fulfilled</option>
@@ -157,12 +137,73 @@ export default function Orders () {
                 </div>
             </div>
 
+            <div className='flex'>
+                <div className="flex flex-col gap-2 ml-4">
+                    <label className="label">
+                        <span className="label-text">Filter by date</span>
+                    </label>
+                    <input
+                        onChange={ (e) => setFilterDate(e.target.value) }
+                        type="date"
+                        className="input input-bordered w-full max-w-xs"
+                    />
+                </div>
+                <div className="flex flex-col gap-2 ml-4">
+                    <label className="label">
+                        <span className="label-text">To date</span>
+                    </label>
+                    <input
+                        onChange={ (e) => setFilterDateTo(e.target.value) }
+                        type="date"
+                        className="input input-bordered w-full max-w-xs"
+                    />
+                </div>
+                <div className="flex flex-col gap-2 ml-4">
+                    <button 
+                        onClick={() => {
+                            setFilterDate('');
+                            setFilterDateTo('');
+                            document.querySelectorAll('input[type="date"]').forEach(input => input.value = '');
+                        }} 
+                        className="btn primary-btn mt-2"
+                        >
+                        Reset Dates
+                    </button>
+                </div>
+            </div>
+
         </div>
 
         <hr className='mb-8' />
 
         <div className="border border-spacing-4 border-gray-200 rounded-lg p-4">
-            {orders.map(order => (
+            {orders.filter((order) => {
+                const order_data = order.attributes;
+
+                const productFound = filterProducts.trim() !== '' 
+                    ? order.relationships.products.some(product => product.name.toLowerCase().includes(filterProducts.toLowerCase()))
+                    : true;
+                
+                const orderFound = filterOrder.trim() !== ''
+                    ? order_data.name.toLowerCase().includes(filterOrder.toLowerCase()) ||
+                    order_data.description.toLowerCase().includes(filterOrder.toLowerCase())
+                    : true;
+
+                const orderStatusFound = filterStatus === 'all' || order_data.status.toLowerCase() === filterStatus.toLowerCase();
+
+                console.log('filterDateTo', filterDateTo);
+                console.log('filterDate', filterDate);
+                console.log('order_data.date', order_data.date);
+                const orderDateFound = filterDateTo.trim() === '' 
+                        ? ( filterDate.trim() !== '' 
+                            ? order_data.date === filterDate
+                            : true )
+                        : ( filterDate.trim() !== '' 
+                            ? order_data.date >= filterDate && order_data.date <= filterDateTo
+                            : order_data.date <= filterDateTo );
+                
+                return productFound && orderFound && orderStatusFound && orderDateFound;
+            }).map(order => (
                 <div key={order.id} className="card w-full mb-8">
                 {/* Flex container for the title and buttons */}
                 <div className="flex justify-between items-center mb-4">
