@@ -8,6 +8,7 @@ import { AppContext } from './context/context';
 import Orders from './pages/orders/index';
 import CreateOrder from './pages/orders/create';
 import ShowOrder from './pages/orders/show';
+import UpdateOrder from './pages/orders/edit';
 
 export default function App() {
   const { user } = useContext(AppContext);
@@ -22,6 +23,7 @@ export default function App() {
           <Route path='/orders/create' element={ user ? <CreateOrder /> : <Login /> } />
           <Route path='/login' element={ user ? <Home /> : <Login /> } />
           <Route path='/orders/:id' element={ user ? <ShowOrder /> : <Login /> } />
+          <Route path='/orders/:id/edit' element={ user ? <UpdateOrder /> : <Login /> } />
         </Route>
       </Routes>
     </BrowserRouter>

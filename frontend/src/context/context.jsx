@@ -26,14 +26,10 @@ export default function AppProvider({ children }) {
     };
 
     useEffect( () => {
-        if (token) {
-            getUser();
-            getProducts();
-        }
+        getUser();
+        getProducts();
     }
     , [token]);
-
-
 
     async function getProducts() {
         const res = await fetch('/api/v1/products', {
@@ -52,8 +48,6 @@ export default function AppProvider({ children }) {
             setProducts(data.data);
         }
     }
-
-
 
     return (
         <AppContext.Provider value={{ token, setToken, user, setUser, products, setProducts }}>

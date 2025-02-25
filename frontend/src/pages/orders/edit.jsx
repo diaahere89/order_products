@@ -1,9 +1,10 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { AppContext } from "../../context/context";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 
-export default function CreateOrder() {
+export default function UpdateOrder() {
     const navigate = useNavigate();
+    const { id } = useParams();
     const { token, user, products } = useContext(AppContext);
     
     const [ errors, setErrors ]     = useState({});
@@ -13,11 +14,57 @@ export default function CreateOrder() {
         status: "",
         date: "",
         purchasedProducts: {},
-        stock: products.reduce((acc, product) => {
+        stock: products?.reduce((acc, product) => {
             acc[product.id] = product.attributes.stock; 
             return acc;
         }, {})
     });
+
+    async function getOrder() {
+        const res = await fetch(`/api/v1/orders/${id}`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+            },
+        });
+
+        const data = await res.json();
+
+        console.log('getOrder', data)
+        console.log('getOrder products', products)
+
+        if (data.errors) {
+            console.log('Erros ', data.errors);
+            setErrors(data.errors);
+        }
+
+
+        if (res.ok) {
+            setFormData({
+                name: data.attributes.name,
+                description: data.attributes.description,
+                status: data.attributes.status,
+                date: data.attributes.date,
+                purchasedProducts: Object.values(data?.relationships?.products || {}).map((product) => ({
+                    id: product.id,
+                    name: product.name,
+                    quantity: product.pivot.quantity,
+                    price: product.price,
+                })),
+                stock: products?.reduce((acc, product) => {
+                    acc[product.id] = product.attributes.stock;
+                    return acc;
+                }, {})
+            });
+
+            console.log('res ok formData', formData)
+        }
+    }
+
+    useEffect(() => {
+        getOrder();
+    }, []);
+    
 
     const handleAddProduct = (product) => {
         setFormData((prev) => {
@@ -59,38 +106,45 @@ export default function CreateOrder() {
         }, 0);
     };
 
+    const ucwords = (str) => {
+        return str.replace(/\b\w/g, char => char.toUpperCase());
+    };
 
-    async function handleCreateOrder(e) {
-        e.preventDefault();
-        console.log("Order submitted", formData);
 
-        const productsSet = Object.values(formData.purchasedProducts).map((product) => ({
-            id: product.id,
-            quantity: product.quantity,
-            price: product.attributes.price,
-        }));
-
-        console.log("Products Set:", productsSet);
-
-        const dataSet = {
+    const calcDataSet = () => {
+        return {
             data: {
                 attributes: {
                     user_id: user.id,
                     name: formData.name,
                     description: formData.description,
                     status: formData.status,
-                    date: formData.date,        
+                    date: formData.date,
                 },
                 relationships: {
-                    products: productsSet,
+                    products: Object.values(formData.purchasedProducts).map((product) => ({
+                        id: product.id,
+                        quantity: product.quantity,
+                        price: product.price,
+                    })),
                 }
             }
+        };
+    }
+
+    async function handleUpdateOrder(e) {
+        e.preventDefault();
+        if (!window.confirm("Are you sure you want to update this order?")) {
+            return;
         }
 
+        const dataSet = calcDataSet();
+
+        console.log("Order submitted", formData);
         console.log("dataSet:", dataSet);
 
-        const res = await fetch('/api/v1/orders', {
-            method: 'POST',
+        const res = await fetch(`/api/v1/orders/${id}`, {
+            method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`,
@@ -100,18 +154,15 @@ export default function CreateOrder() {
         });
 
         const data = await res.json();
-        console.log(data);
+        
         if (res.ok) {
-            navigate('/orders');
+            navigate(`/orders/${id}`);
         } else {
             console.log(data.errors);
             setErrors(data.errors);
         }
     };
 
-    const ucwords = (str) => {
-        return str.replace(/\b\w/g, char => char.toUpperCase());
-    };
 
     return (
         <>
@@ -119,8 +170,8 @@ export default function CreateOrder() {
 
                 {/* Form Section */}
                 <div className="w-1/2">
-                    <h1 className="title">Make an Order</h1>
-                    <form onSubmit={handleCreateOrder} className="space-y-5">
+                    <h1 className="title">Update your Order</h1>
+                    <form onSubmit={handleUpdateOrder} className="space-y-5">
                         <div>
                             <label htmlFor="name">Name</label>
                             <input type="text" id="name" value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} required />
@@ -143,7 +194,7 @@ export default function CreateOrder() {
                             <input type="date" id="date" value={formData.date} onChange={(e) => setFormData({ ...formData, date: e.target.value })} required />
                         </div>
 
-                            {/* Added Products Section */}
+                            {/* Added Products Section 
                             <h3 className="text-lg font-bold mt-6">Added Products</h3>
                             {Object.values(formData.purchasedProducts).length > 0 ? (
                                 <div className="space-y-3">
@@ -169,8 +220,12 @@ export default function CreateOrder() {
                             ) : (
                                 <p>No products added.</p>
                             )}
+                            */}
 
-                        <button type="submit" className="btn primary-btn">Create Order</button>
+                        <div className="flex gap-2 justify-between items-center mb-4 space-x-2">
+                            <Link to={`/orders/${id}`} className="text-red-500 flex items-center space-x-1">Cancel</Link>
+                            <button type="submit" className="btn primary-btn">Update Order</button>
+                        </div>
 
                         {Object.keys(errors).length > 0 && (
                             <div className="mt-4 text-red-500">
@@ -186,12 +241,12 @@ export default function CreateOrder() {
                     </form>
                 </div>
 
-                {/* Products Section */}
+                {/* Products Section 
                 <div className="w-1/2">
                     <h1 className="title text-lg font-bold">Select Products</h1>
 
                     <div className="grid grid-cols-3 gap-4">
-                        {products.map((product) => (
+                        {products?.map((product) => (
                             <div key={product.id} className="border p-3 rounded-lg flex flex-col justify-between">
                                 <div>
                                     <h4>{ucwords(product.attributes.name)}</h4>
@@ -204,6 +259,7 @@ export default function CreateOrder() {
                         ))}
                     </div>
                 </div>
+                */}
 
             </div>
         </>
