@@ -33,7 +33,7 @@ class StoreOrderRequest extends BaseOrderRequest
                 'integer',
                 function ($attribute, $value, $fail) {
                     if (Auth::user()->id !== $value) {
-                        $fail('User is not authorized.');
+                        $fail('User is not authorized to create an order for another user.');
                     }
                 },
             ],

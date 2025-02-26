@@ -33,7 +33,7 @@ class UpdateOrderRequest extends BaseOrderRequest
                 'integer',
                 function ($attribute, $value, $fail) {
                     if (Auth::user()->id !== $value) {
-                        $fail('User is not authorized.');
+                        $fail('User is not authorized to update an order for another user.');
                     }
                 },
             ],

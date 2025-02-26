@@ -28,7 +28,7 @@ class OrderPolicy
      */
     public function create(User $user): bool
     {
-        return false;
+        return request()->input('data.attributes.user_id') === $user->id;
     }
 
     /**

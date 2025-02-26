@@ -1,6 +1,25 @@
 # Order Management System
 
 This **Order Management System** project is built using **Laravel**, and **ReactJS**. It allows you to manage orders, products, and stock levels.
+<br>
+Concurrent requests are handled by Database Transactions with Row Locking.
+<br>
+The API is versioned, current version is: V1.0.0. <br>
+Order requests are managed by certain Stock Validation Rules for CreateOrder and UpdateOrder. <br>
+Authorization is achieved by OrderPolicy. <br>
+PUT: Request validated by ReplaceOrderRequest, <br>
+PATCH: Request validated by UpdateOrderRequest, <br>
+POST: Request validated by CreateOrderRequest, all inheriting from BaseOrderRequest.
+<br>
+GET: Orders are filtered by OrderFilter and QueryFilter. <br>
+ex. using Postman or whatever: http://localhost:2202/api/v1/orders?filter[name]=*ordername*&filter[status]=P,C
+<br>
+This will filter the orders by name and status in Pending or Cancelled.
+<br>
+<br>
+Response and payload is designed in the Resourse/Collection of each model according to the API endpoints.
+
+
 
 ---
 
