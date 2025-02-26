@@ -9,16 +9,22 @@ use App\Http\Requests\Api\V1\UpdateOrderRequest;
 use App\Http\Resources\V1\OrderCollection;
 use App\Http\Resources\V1\OrderResource;
 use App\Models\Order;
-use App\Models\User;
 use App\Policies\V1\OrderPolicy;
+use App\Services\V1\OrdersService;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Throwable;
 
 class OrderController extends ApiController
 {
     protected $policyClass = OrderPolicy::class;
+
+    public function __construct( protected OrdersService $orderService )
+    {}
 
     /**
      * Display a listing of the resource.
@@ -35,21 +41,15 @@ class OrderController extends ApiController
     public function store(StoreOrderRequest $request)
     {
         try {
-            $user = User::findOrFail( $request->input('data.attributes.user_id') );
-        } catch (ModelNotFoundException $e) {
-            return $this->ok( 'User not found', [
-                'errors' => ['The provided user id does not exist'],
-                'status' => Response::HTTP_NOT_FOUND
-            ]);
+            $order = $this->orderService->createOrderHandleProducts( $request );
+            return response()->json( new OrderResource($order), Response::HTTP_CREATED );
+        } catch (QueryException $eQueryException) {
+            DB::rollback(); // Rollback transaction on database error
+            return $this->error( 'Database error', Response::HTTP_INTERNAL_SERVER_ERROR );
+        } catch (Throwable $eTh) {
+            DB::rollback(); // Rollback transaction on any other error
+            return $this->error( 'An unexpected error occurred', Response::HTTP_INTERNAL_SERVER_ERROR );
         }
-
-        $order = Order::create($request->mappedAttributes());
-        
-        $products = $request->input('data.relationships.products');
-        foreach ($products as $product) {
-            $order->products()->attach($product['id'], ['quantity' => $product['quantity'], 'price' => $product['price']]);
-        }
-        return response()->json( new OrderResource($order), Response::HTTP_CREATED );
     }
 
     /**
@@ -77,25 +77,14 @@ class OrderController extends ApiController
 
     /**
      * Update the specified resource in storage.
+     * PATCH
      */
     public function update(UpdateOrderRequest $request, $order_id)
     {
-        // PATCH
         try {
             $order = Order::findOrFail($order_id);
-
             $this->isAble('update', $order); //policy
-    
-            $order->update($request->mappedAttributes());
-            
-            $products = $request->input('data.relationships.products');
-            if ( $products ) {
-                $order->products()->detach();
-                foreach ($products as $product) {
-                    $order->products()->attach($product['id'], ['quantity' => $product['quantity'], 'price' => $product['price']]);
-                }
-            }
-    
+            $this->orderService->updateOrderHandleProducts( $request, $order );
             return response()->json( new OrderResource($order), Response::HTTP_OK );
         } catch (ModelNotFoundException $eModelNotFound) {
             return $this->error( 'Order not found', [
@@ -104,28 +93,25 @@ class OrderController extends ApiController
             ]);
         } catch (AuthorizationException $eAuthorizationException) {
             return $this->error( 'You are not authorized', Response::HTTP_UNAUTHORIZED );
+        } catch (QueryException $eQueryException) {
+            DB::rollback(); // Rollback transaction on database error
+            return $this->error( 'Database error', Response::HTTP_INTERNAL_SERVER_ERROR );
+        } catch (Throwable $eTh) {
+            DB::rollback(); // Rollback transaction on any other error
+            return $this->error( 'An unexpected error occurred', Response::HTTP_INTERNAL_SERVER_ERROR );
         }
-
     }
 
     /**
      * Replace the specified resource in storage.
+     * PUT
      */
     public function replace(ReplaceOrderRequest $request, $order_id)
     {
-        // PUT
         try {
             $order = Order::findOrFail($order_id);
             $this->isAble('update', $order); //policy
-
-            $order->update($request->mappedAttributes());
-    
-            $products = $request->input('data.relationships.products');
-            $order->products()->detach();
-            foreach ($products as $product) {
-                $order->products()->attach($product['id'], ['quantity' => $product['quantity'], 'price' => $product['price']]);
-            }
-    
+            $this->orderService->updateOrderHandleProducts( $request, $order );
             return response()->json( new OrderResource($order), Response::HTTP_OK );
         } catch (ModelNotFoundException $eModelNotFound) {
             return $this->error( 'Order not found', [
@@ -134,6 +120,12 @@ class OrderController extends ApiController
             ]);
         } catch (AuthorizationException $eAuthorizationException) {
             return $this->error( 'You are not authorized', Response::HTTP_UNAUTHORIZED );
+        } catch (QueryException $eQueryException) {
+            DB::rollback(); // Rollback transaction on database error
+            return $this->error( 'Database error', Response::HTTP_INTERNAL_SERVER_ERROR );
+        } catch (Throwable $eTh) {
+            DB::rollback(); // Rollback transaction on any other error
+            return $this->error( 'An unexpected error occurred', Response::HTTP_INTERNAL_SERVER_ERROR );
         }
     }
 
