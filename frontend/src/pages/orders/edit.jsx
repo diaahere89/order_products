@@ -1,6 +1,8 @@
 import { useContext, useEffect, useState } from "react";
 import { AppContext } from "../../context/context";
 import { Link, useNavigate, useParams } from "react-router-dom";
+import { ucwords, calculateTotal } from "../utils";
+
 
 export default function UpdateOrder() {
     const navigate = useNavigate();
@@ -30,11 +32,7 @@ export default function UpdateOrder() {
 
         const data = await res.json();
 
-        console.log('getOrder', data)
-        console.log('getOrder products', products)
-
         if (data.errors) {
-            console.log('Erros ', data.errors);
             setErrors(data.errors);
         }
 
@@ -59,8 +57,6 @@ export default function UpdateOrder() {
                     return acc;
                 }, {})
             });
-
-            console.log('res ok formData', formData)
         }
     }
 
@@ -90,9 +86,6 @@ export default function UpdateOrder() {
             const updatedProducts = { ...prev.purchasedProducts };
             const updatedStock = { ...prev.stock };
 
-            console.log('productId', productId)
-            console.log('updatedProducts', updatedProducts)
-            console.log('newQuantity', newQuantity)
             if (newQuantity > 0) {
                 const diff = newQuantity - (updatedProducts[productId]?.quantity || 0);
                 if (updatedStock[productId] - diff >= 0) {
@@ -106,17 +99,6 @@ export default function UpdateOrder() {
             return { ...prev, purchasedProducts: updatedProducts, stock: updatedStock };
         });
     };
-
-    const calculateTotal = () => {
-        return Object.values(formData.purchasedProducts).reduce((total, product) => {
-            return total + product.price * product.quantity;
-        }, 0);
-    };
-
-    const ucwords = (str) => {
-        return str.replace(/\b\w/g, char => char.toUpperCase());
-    };
-
 
     const calcDataSet = () => {
         return {
@@ -145,11 +127,6 @@ export default function UpdateOrder() {
             return;
         }
 
-        const dataSet = calcDataSet();
-
-        console.log("Order submitted", formData);
-        console.log("dataSet:", dataSet);
-
         const res = await fetch(`/api/v1/orders/${id}`, {
             method: 'PUT',
             headers: {
@@ -157,7 +134,7 @@ export default function UpdateOrder() {
                 'Authorization': `Bearer ${token}`,
                 'Accept': 'application/json',
             },
-            body: JSON.stringify(dataSet),
+            body: JSON.stringify(calcDataSet()),
         });
 
         const data = await res.json();
@@ -165,7 +142,6 @@ export default function UpdateOrder() {
         if (res.ok) {
             navigate(`/orders/${id}`);
         } else {
-            console.log(data.errors);
             setErrors(data.errors);
         }
     };
@@ -222,7 +198,7 @@ export default function UpdateOrder() {
                                         </>
                                     ))}
                                     <div className="text-left font-bold">
-                                        Total: €{calculateTotal().toFixed(2)}
+                                        Total: €{calculateTotal(formData.purchasedProducts).toFixed(2)}
                                     </div>
                                 </div>
                             ) : (

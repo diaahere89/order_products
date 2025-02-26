@@ -2,12 +2,14 @@ import { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { AppContext } from "../../context/context";
 import { Link } from 'react-router-dom';
+import { formatDate, getStatusText, ucwords } from "../utils";
 
 export default function ShowOrder() {
+    const navigate = useNavigate();
     const { id } = useParams();
     const { token, user } = useContext(AppContext);
     const [ order, setOrder ] = useState(null);
-    const navigate = useNavigate();
+    const [ orderOwner, setOrderOwner ] = useState(null);
 
     async function getOrder() {
         const res = await fetch(`/api/v1/orders/${id}?include=user`, {
@@ -18,8 +20,7 @@ export default function ShowOrder() {
         });
 
         const data = await res.json();
-
-        console.log('getOrder', data)
+        console.log(data);
 
         if (data.errors) {
             console.log(data.errors);
@@ -30,37 +31,13 @@ export default function ShowOrder() {
                 navigate('/orders');
             }
             setOrder(data);
+            setOrderOwner(data.includes.owner.data);
         }
     }
 
     useEffect(() => {
         getOrder();
     }, []);
-
-    const ucwords = (str) => {
-        return str.replace(/\b\w/g, char => char.toUpperCase());
-    };
-
-    const formatDate = (dateStr) => {
-        const date = new Date(dateStr);
-        const day = String(date.getDate()).padStart(2, '0');
-        const month = String(date.getMonth() + 1).padStart(2, '0');
-        const year = date.getFullYear();
-        return `${day}/${month}/${year}`;
-    };
-
-    const getStatusText = (status) => {
-        switch (status) {
-            case 'F':
-                return 'Fulfilled';
-            case 'C':
-                return 'Cancelled';
-            case 'P':
-                return 'Pending';
-            default:
-                return status;
-        }
-    };
     
     async function handleDelete(e) {
         e.preventDefault();
@@ -75,7 +52,6 @@ export default function ShowOrder() {
         });
         
         const data = await res.json();
-        console.log(data);
 
         if (res.ok) {
             navigate('/orders');
@@ -141,8 +117,10 @@ export default function ShowOrder() {
                                             >
                                             {getStatusText(order.attributes.status)}
                                         </span>
-                                        <br />
-                                        <span className="text-gray-600">{formatDate(order.attributes.date)}</span>
+                                    </p>
+                                    <p className="card-text mt-7">
+                                        Created by: <strong>{orderOwner.attributes.name}</strong> 
+                                        <br /> on date <span className="text-gray-600">{formatDate(order.attributes.date)}</span>
                                     </p>
                                 </div>
                             </div>

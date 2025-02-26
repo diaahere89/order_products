@@ -1,6 +1,7 @@
 import { useContext, useState } from "react";
 import { AppContext } from "../../context/context";
 import { useNavigate } from "react-router-dom";
+import { ucwords, calculateTotalCreateOrder } from "../utils";
 
 export default function CreateOrder() {
     const navigate = useNavigate();
@@ -53,24 +54,8 @@ export default function CreateOrder() {
         });
     };
 
-    const calculateTotal = () => {
-        return Object.values(formData.purchasedProducts).reduce((total, product) => {
-            return total + product.attributes.price * product.quantity;
-        }, 0);
-    };
-
-
     async function handleCreateOrder(e) {
         e.preventDefault();
-        console.log("Order submitted", formData);
-
-        const productsSet = Object.values(formData.purchasedProducts).map((product) => ({
-            id: product.id,
-            quantity: product.quantity,
-            price: product.attributes.price,
-        }));
-
-        console.log("Products Set:", productsSet);
 
         const dataSet = {
             data: {
@@ -82,12 +67,14 @@ export default function CreateOrder() {
                     date: formData.date,        
                 },
                 relationships: {
-                    products: productsSet,
+                    products: Object.values(formData.purchasedProducts).map((product) => ({
+                        id: product.id,
+                        quantity: product.quantity,
+                        price: product.attributes.price,
+                    })),
                 }
             }
         }
-
-        console.log("dataSet:", dataSet);
 
         const res = await fetch('/api/v1/orders', {
             method: 'POST',
@@ -100,17 +87,12 @@ export default function CreateOrder() {
         });
 
         const data = await res.json();
-        console.log(data);
+        
         if (res.ok) {
             navigate('/orders');
         } else {
-            console.log(data.errors);
             setErrors(data.errors);
         }
-    };
-
-    const ucwords = (str) => {
-        return str.replace(/\b\w/g, char => char.toUpperCase());
     };
 
     return (
@@ -164,7 +146,7 @@ export default function CreateOrder() {
                                         </>
                                     ))}
                                     <div className="text-left font-bold">
-                                        Total: €{calculateTotal().toFixed(2)}
+                                        Total: €{calculateTotalCreateOrder(formData.purchasedProducts).toFixed(2)}
                                     </div>
                                 </div>
                             ) : (

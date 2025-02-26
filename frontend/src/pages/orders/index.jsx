@@ -1,10 +1,13 @@
 import { useContext, useEffect, useState } from 'react';
 import { AppContext } from '../../context/context';
 import { Link } from 'react-router-dom';
+import { ucwords, formatDate, getStatusText } from "../utils";
 
 export default function Orders () {
     const { token } = useContext(AppContext);
     const [ orders, setOrders ] = useState([]);
+
+    // filters 
     const [ filterOrder, setFilterOrder ] = useState('');
     const [ filterProducts, setFilterProducts ] = useState('');
     const [ filterStatus, setFilterStatus ] = useState('all');
@@ -23,7 +26,7 @@ export default function Orders () {
     };
 
     async function getOrders() {
-        const res = await fetch('/api/v1/orders', {
+        const res = await fetch('/api/v1/orders?include=user', {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -58,38 +61,11 @@ export default function Orders () {
         });
         
         const data = await res.json();
-        console.log(data);
 
         if (res.ok) {
             getOrders();
         }
     }
-
-
-    const ucwords = (str) => {
-        return str.replace(/\b\w/g, char => char.toUpperCase());
-    };
-
-    const formatDate = (dateStr) => {
-        const date = new Date(dateStr);
-        const day = String(date.getDate()).padStart(2, '0');
-        const month = String(date.getMonth() + 1).padStart(2, '0');
-        const year = date.getFullYear();
-        return `${day}/${month}/${year}`;
-    };
-
-    const getStatusText = (status) => {
-        switch (status) {
-            case 'F':
-                return 'Fulfilled';
-            case 'C':
-                return 'Cancelled';
-            case 'P':
-                return 'Pending';
-            default:
-                return status;
-        }
-    };
 
     return (
       <>
@@ -191,9 +167,6 @@ export default function Orders () {
 
                 const orderStatusFound = filterStatus === 'all' || order_data.status.toLowerCase() === filterStatus.toLowerCase();
 
-                console.log('filterDateTo', filterDateTo);
-                console.log('filterDate', filterDate);
-                console.log('order_data.date', order_data.date);
                 const orderDateFound = filterDateTo.trim() === '' 
                         ? ( filterDate.trim() !== '' 
                             ? order_data.date === filterDate
@@ -261,8 +234,10 @@ export default function Orders () {
                                     >
                                     {getStatusText(order.attributes.status)}
                                 </span>
-                                <br />
-                                <span className="text-gray-600">{formatDate(order.attributes.date)}</span>
+                            </p>
+                            <p className="card-text mt-7">
+                                Created by: <strong>{order.includes.owner.data.attributes.name}</strong> 
+                                <br /> on date <span className="text-gray-600">{formatDate(order.attributes.date)}</span>
                             </p>
                         </div>
                     </div>
