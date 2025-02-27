@@ -4,6 +4,7 @@ namespace App\Policies\V1;
 
 use App\Models\Order;
 use App\Models\User;
+use App\Permissions\V1\Abilities;
 
 class OrderPolicy
 {
@@ -36,7 +37,12 @@ class OrderPolicy
      */
     public function update(User $authUser, Order $order): bool
     {
-        return $this->orderOwner($authUser, $order) && $this->requestOwner($authUser);
+        if ( $authUser->tokenCan(Abilities::Update_All_Orders) ) {
+            return true;
+        } else if ( $authUser->tokenCan(Abilities::Update_Own_Order) ) {
+            return $this->orderOwner($authUser, $order) && $this->requestOwner($authUser);
+        }
+        return false;
     }
 
     /**

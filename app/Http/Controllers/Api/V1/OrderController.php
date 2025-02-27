@@ -31,9 +31,13 @@ class OrderController extends ApiController
      */
     public function index( OrderFilter $filter )
     {
-        return response()->json( new OrderCollection(
-            Order::filter( $filter )->paginate()
-        ), Response::HTTP_OK );
+        try {
+            return response()->json( new OrderCollection(
+                Order::filter( $filter )->paginate()
+            ), Response::HTTP_OK );
+        } catch (AuthorizationException $eAuthorizationException) {
+            return $this->error( 'You are not authorized', Response::HTTP_UNAUTHORIZED );
+        }
     }
 
 
@@ -91,7 +95,7 @@ class OrderController extends ApiController
             $this->orderService->updateOrderHandleProducts( $request, $order );
             return response()->json( new OrderResource($order), Response::HTTP_OK );
         } catch (ModelNotFoundException $eModelNotFound) {
-            return $this->error( 'You are not authorized', Response::HTTP_UNAUTHORIZED );
+            return $this->error( 'Order not found', Response::HTTP_NOT_FOUND );
         } catch (AuthorizationException $eAuthorizationException) {
             return $this->error( 'You are not authorized', Response::HTTP_UNAUTHORIZED );
         } catch (QueryException $eQueryException) {

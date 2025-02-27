@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\LoginUserRequest;
 use App\Models\User;
+use App\Permissions\V1\Abilities;
 use App\Traits\V1\ApiResponses;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -25,7 +26,7 @@ class AuthController extends Controller
         }
 
         $user  = User::firstWhere('email', $request->email);
-        $token = $user?->createToken('authToken', ['*'], now()->addHours(8))->plainTextToken;
+        $token = $user?->createToken('authToken', Abilities::getAbilities($user), now()->addHours(8))->plainTextToken;
         return $this->ok(
             'Authenticated',
             [
