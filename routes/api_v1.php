@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\Api\V1\OrderController;
+use App\Http\Controllers\Api\V1\OrderOwnerController;
+use App\Http\Controllers\Api\V1\OwnerOrdersController;
 use App\Http\Controllers\Api\V1\ProductController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -15,10 +17,13 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
     Route::apiResource('orders', OrderController::class)->except( ['update'] );
-    Route::put('orders/{order}', [ OrderController::class, 'replace' ]);
     Route::patch('orders/{order}', [ OrderController::class, 'update' ]);
+    Route::put('orders/{order}', [ OrderController::class, 'replace' ]);
 
     Route::get('products', [ ProductController::class, 'index' ]);
+
+    Route::get('owners/{owner}', [ OrderOwnerController::class, 'show' ])->name('owners.show');
+    Route::apiResource('owners.orders', OwnerOrdersController::class);
 });
 
 //Route::apiResource('orders', OrderController::class);

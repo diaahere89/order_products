@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { ucwords, formatDate, getStatusText } from "../utils";
 
 export default function Orders () {
-    const { token } = useContext(AppContext);
+    const { token, user } = useContext(AppContext);
     const [ orders, setOrders ] = useState([]);
 
     // filters 
@@ -26,7 +26,7 @@ export default function Orders () {
     };
 
     async function getOrders() {
-        const res = await fetch('/api/v1/orders?include=user&sortByDesc=id', {
+        const res = await fetch(`/api/v1/owners/${user.id}/orders?include=user&sortByDesc=id`, {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -39,8 +39,7 @@ export default function Orders () {
         }
         
         if (res.ok) {
-            const list = data.data.sort((a, b) => b.id - a.id);
-            setOrders(list);
+            setOrders(data.data);
         }
     }
 

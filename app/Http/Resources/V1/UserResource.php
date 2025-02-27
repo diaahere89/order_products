@@ -26,7 +26,13 @@ class UserResource extends JsonResource
                     'created_at' => $this->created_at,
                     'updated_at' => $this->updated_at,
                 ]),
-            ]
+            ],
+            'relationships' => [
+                'orders' => new OrderCollection($this->whenLoaded('orders')),
+            ],
+            'links' => [
+                'self' => route('owners.show', ['owner' => $this->id]),
+            ],
         ];
     }
 }
