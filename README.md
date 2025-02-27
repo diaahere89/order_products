@@ -59,6 +59,7 @@ Response and payload is designed in the Resourse/Collection of each model accord
   - Laravel Sanctum (API authentication)
   - MySQL (Database)
   - PHPUnit (Testing)
+  - brianium/paratest (Parallel testing)
 
 - **Frontend**:
   - React (User interface)
@@ -184,7 +185,7 @@ Before you begin, ensure you have the following installed:
 ## Running Tests
 To run the unit tests, use the following command:
 ```bash
-./vendor/bin/sail test
+./vendor/bin/sail test --parallel tests/Feature/
 ```
 
 ---
