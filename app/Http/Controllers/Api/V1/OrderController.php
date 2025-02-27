@@ -15,7 +15,6 @@ use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Throwable;
 
@@ -32,26 +31,11 @@ class OrderController extends ApiController
      */
     public function index( OrderFilter $filter )
     {
-        $orders = Order::filter( $filter )->paginate();
-        return response()->json( new OrderCollection($orders), Response::HTTP_OK );
+        return response()->json( new OrderCollection(
+            Order::filter( $filter )->paginate()
+        ), Response::HTTP_OK );
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreOrderRequest $request)
-    {
-        try {
-            $order = $this->orderService->createOrderHandleProducts( $request );
-            return response()->json( new OrderResource($order), Response::HTTP_CREATED );
-        } catch (QueryException $eQueryException) {
-            DB::rollback(); // Rollback transaction on database error
-            return $this->error( 'Database error', Response::HTTP_INTERNAL_SERVER_ERROR );
-        } catch (Throwable $eTh) {
-            DB::rollback(); // Rollback transaction on any other error
-            return $this->error( 'An unexpected error occurred', Response::HTTP_INTERNAL_SERVER_ERROR );
-        }
-    }
 
     /**
      * Display the specified resource.
@@ -76,6 +60,25 @@ class OrderController extends ApiController
         }
     }
 
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(StoreOrderRequest $request)
+    {
+        try {
+            $order = $this->orderService->createOrderHandleProducts( $request );
+            return response()->json( new OrderResource($order), Response::HTTP_CREATED );
+        } catch (QueryException $eQueryException) {
+            DB::rollback(); // Rollback transaction on database error
+            return $this->error( 'Database error', Response::HTTP_INTERNAL_SERVER_ERROR );
+        } catch (Throwable $eTh) {
+            DB::rollback(); // Rollback transaction on any other error
+            return $this->error( 'An unexpected error occurred', Response::HTTP_INTERNAL_SERVER_ERROR );
+        }
+    }
+
+
     /**
      * Update the specified resource in storage.
      * PATCH
@@ -99,6 +102,7 @@ class OrderController extends ApiController
             return $this->error( 'An unexpected error occurred', Response::HTTP_INTERNAL_SERVER_ERROR );
         }
     }
+
 
     /**
      * Replace the specified resource in storage.
