@@ -4,10 +4,15 @@ namespace App\Http\Filters\V1;
 
 class OrderFilter extends QueryFilter
 {
-    public function include( $value )
-    {
-        return $this->builder->with($value);
-    }
+    protected $sortable = [
+        'id', 
+        'name', 
+        'description', 
+        'date', 
+        'status',
+        'createdAt' => 'created_at', 
+        'updatedAt' => 'updated_at',
+    ];
 
     public function status( $value )
     {
@@ -32,26 +37,6 @@ class OrderFilter extends QueryFilter
     {
         $like_str = str_replace('*', '%', $value);
         return $this->builder->where('description', 'like', $like_str);
-    }
-
-    public function sortByDesc( $value )
-    {
-        return $this->builder->orderBy($value, 'desc');
-    }
-
-    public function sortByAsc( $value )
-    {
-        return $this->builder->orderBy($value, 'asc');
-    }
-
-    public function limit( $value )
-    {
-        return $this->builder->limit($value);
-    }
-
-    public function offset( $value )
-    {
-        return $this->builder->offset($value);
     }
 
 }

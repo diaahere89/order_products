@@ -49,6 +49,5 @@ class OrderResource extends JsonResource
                 'self' => route('orders.show', ['order' => $this->id]),
             ],
         ];
-        //return parent::toArray($request);
     }
 }

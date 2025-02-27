@@ -88,10 +88,7 @@ class OrderController extends ApiController
             $this->orderService->updateOrderHandleProducts( $request, $order );
             return response()->json( new OrderResource($order), Response::HTTP_OK );
         } catch (ModelNotFoundException $eModelNotFound) {
-            return $this->error( 'Order not found', [
-                'errors' => ['Order does not exist'],
-                'status' => Response::HTTP_NOT_FOUND
-            ]);
+            return $this->error( 'You are not authorized', Response::HTTP_UNAUTHORIZED );
         } catch (AuthorizationException $eAuthorizationException) {
             return $this->error( 'You are not authorized', Response::HTTP_UNAUTHORIZED );
         } catch (QueryException $eQueryException) {
@@ -115,10 +112,7 @@ class OrderController extends ApiController
             $this->orderService->updateOrderHandleProducts( $request, $order );
             return response()->json( new OrderResource($order), Response::HTTP_OK );
         } catch (ModelNotFoundException $eModelNotFound) {
-            return $this->error( 'Order not found', [
-                'errors' => ['Order does not exist'],
-                'status' => Response::HTTP_NOT_FOUND
-            ]);
+            return $this->error( 'Order not found', Response::HTTP_NOT_FOUND );
         } catch (AuthorizationException $eAuthorizationException) {
             return $this->error( 'You are not authorized', Response::HTTP_UNAUTHORIZED );
         } catch (QueryException $eQueryException) {
@@ -144,10 +138,7 @@ class OrderController extends ApiController
                 'status' => Response::HTTP_OK
             ]);
         } catch (ModelNotFoundException $eModelNotFound) {
-            return $this->error( 'Order not found', [
-                'errors' => ['Order does not exist'],
-                'status' => Response::HTTP_NOT_FOUND
-            ]);
+            return $this->error( 'Order not found', Response::HTTP_NOT_FOUND );
         } catch (AuthorizationException $eAuthorizationException) {
             return $this->error( 'You are not authorized', Response::HTTP_UNAUTHORIZED );
         }

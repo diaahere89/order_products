@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers\Api\V1;
 
-use App\Http\Filters\V1\OrderFilter;
+use App\Http\Filters\V1\OwnerFilter;
+use App\Http\Resources\V1\UserCollection;
 use App\Http\Resources\V1\UserResource;
 use App\Models\User;
 use Illuminate\Http\Response;
@@ -12,10 +13,11 @@ class OrderOwnerController extends ApiController
     /**
      * Display a listing of the resource.
      */
-    public function orders( OrderFilter $filter )
+    public function index( OwnerFilter $filter )
     {
-        //$orders = Order::filter( $filter )->paginate();
-        return response()->json( new UserResource(User::with('orders')), Response::HTTP_OK );
+        return response()->json( new UserCollection(
+            User::with('orders')->filter($filter)->paginate()
+        ), Response::HTTP_OK );
     }
 
 

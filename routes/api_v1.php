@@ -22,7 +22,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('products', [ ProductController::class, 'index' ]);
 
-    Route::get('owners/{owner}', [ OrderOwnerController::class, 'show' ])->name('owners.show');
+    Route::apiResource('owners', OrderOwnerController::class);
     Route::apiResource('owners.orders', OwnerOrdersController::class);
 });
 
