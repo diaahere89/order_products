@@ -22,21 +22,14 @@ class UpdateOrderRequest extends BaseOrderRequest
      */
     public function rules(): array
     {
+        $user = $this->user();
+
         return [
             'data' => 'required|array',
             'data.attributes' => 'sometimes|array',
             'data.relationships' => 'sometimes|array',
-
-            'data.attributes.user_id' => [
-                'required',
-                'exists:users,id',
-                'integer',
-                function ($attribute, $value, $fail) {
-                    if (Auth::user()->id !== $value) {
-                        $fail('User is not authorized to update an order for another user.');
-                    }
-                },
-            ],
+            
+            'data.attributes.user_id' => 'required|integer|exists:users,id|size:' . $user->id,
             'data.attributes.name' => 'sometimes|string',
             'data.attributes.description' => 'sometimes|string',
             'data.attributes.status' => 'sometimes|string|in:P,F,C',

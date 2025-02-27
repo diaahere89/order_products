@@ -1,0 +1,364 @@
+name: Endpoints
+description: ''
+endpoints:
+  -
+    httpMethods:
+      - GET
+    uri: api/user
+    metadata:
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: true
+      custom: []
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: '{"id":3,"name":"Wendy Hills","email":"schinner.paolo@example.com","email_verified_at":"2025-02-24T21:08:56.000000Z","created_at":"2025-02-24T21:08:56.000000Z","updated_at":"2025-02-24T21:08:56.000000Z"}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          access-control-allow-origin: '*'
+        description: null
+        custom: []
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 11|IBU2fQr1XbcQGjMC4GRgGvc4TyeE4LVdR57h9lrr372ee8b6'
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - POST
+    uri: api/login
+    metadata:
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: true
+      custom: []
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      email:
+        name: email
+        description: 'Must be a valid email address.'
+        required: true
+        example: gbailey@example.net
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      password:
+        name: password
+        description: 'Must be at least 8 characters.'
+        required: true
+        example: '+-0pBNvYgxwmi/#iw'
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+    cleanBodyParameters:
+      email: gbailey@example.net
+      password: '+-0pBNvYgxwmi/#iw'
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 11|IBU2fQr1XbcQGjMC4GRgGvc4TyeE4LVdR57h9lrr372ee8b6'
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - POST
+    uri: api/logout
+    metadata:
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: true
+      custom: []
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 11|IBU2fQr1XbcQGjMC4GRgGvc4TyeE4LVdR57h9lrr372ee8b6'
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - GET
+    uri: api/v1/user
+    metadata:
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: true
+      custom: []
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: '{"id":3,"name":"Wendy Hills","email":"schinner.paolo@example.com","email_verified_at":"2025-02-24T21:08:56.000000Z","created_at":"2025-02-24T21:08:56.000000Z","updated_at":"2025-02-24T21:08:56.000000Z"}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          access-control-allow-origin: '*'
+        description: null
+        custom: []
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 11|IBU2fQr1XbcQGjMC4GRgGvc4TyeE4LVdR57h9lrr372ee8b6'
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - GET
+    uri: api/v1/orders
+    metadata:
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Display a listing of the resource.'
+      description: ''
+      authenticated: true
+      custom: []
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: '{"data":[{"type":"order","id":5,"attributes":{"name":"ullam sapiente mollitia","description":"Repudiandae et ut quia sequi aliquid sint nisi. Deserunt sapiente dolores assumenda error dignissimos voluptatibus. Et sed quod et vitae.","status":"C","date":"1966-11-10"},"relationships":{"products":[{"id":15,"name":"doloremque et quia","price":"54.72","stock":11,"created_at":"2025-02-24T21:08:56.000000Z","updated_at":"2025-02-24T21:08:56.000000Z","pivot":{"order_id":5,"product_id":15,"quantity":5,"created_at":"2025-02-24T21:08:57.000000Z","updated_at":"2025-02-24T21:08:57.000000Z"}},{"id":21,"name":"et explicabo vel","price":"94.20","stock":22,"created_at":"2025-02-24T21:08:56.000000Z","updated_at":"2025-02-24T21:08:56.000000Z","pivot":{"order_id":5,"product_id":21,"quantity":4,"created_at":"2025-02-24T21:08:57.000000Z","updated_at":"2025-02-24T21:08:57.000000Z"}},{"id":26,"name":"fugit ut cum","price":"71.37","stock":12,"created_at":"2025-02-24T21:08:56.000000Z","updated_at":"2025-02-24T21:08:56.000000Z","pivot":{"order_id":5,"product_id":26,"quantity":6,"created_at":"2025-02-24T21:08:57.000000Z","updated_at":"2025-02-24T21:08:57.000000Z"}},{"id":47,"name":"qui quidem nemo","price":"23.48","stock":7,"created_at":"2025-02-24T21:08:57.000000Z","updated_at":"2025-02-24T21:08:57.000000Z","pivot":{"order_id":5,"product_id":47,"quantity":1,"created_at":"2025-02-24T21:08:57.000000Z","updated_at":"2025-02-24T21:08:57.000000Z"}},{"id":48,"name":"sint voluptates voluptas","price":"52.47","stock":9,"created_at":"2025-02-24T21:08:57.000000Z","updated_at":"2025-02-24T21:08:57.000000Z","pivot":{"order_id":5,"product_id":48,"quantity":7,"created_at":"2025-02-24T21:08:57.000000Z","updated_at":"2025-02-24T21:08:57.000000Z"}}]},"links":{"self":"http:\/\/localhost:2202\/api\/v1\/orders\/5"}},{"type":"order","id":33,"attributes":{"name":"modi quo voluptas","description":"Et dolorem natus ipsam soluta eveniet nihil. Soluta autem est atque in. Omnis velit iure expedita quo.","status":"F","date":"1995-05-01"},"relationships":{"products":[{"id":1,"name":"ex sapiente beatae","price":"98.17","stock":0,"created_at":"2025-02-24T21:08:56.000000Z","updated_at":"2025-02-27T00:30:28.000000Z","pivot":{"order_id":33,"product_id":1,"quantity":2,"created_at":"2025-02-26T22:39:51.000000Z","updated_at":"2025-02-26T22:41:14.000000Z"}},{"id":2,"name":"sapiente est eum","price":"62.89","stock":1,"created_at":"2025-02-24T21:08:56.000000Z","updated_at":"2025-02-27T00:30:28.000000Z","pivot":{"order_id":33,"product_id":2,"quantity":2,"created_at":"2025-02-26T22:39:51.000000Z","updated_at":"2025-02-26T22:41:14.000000Z"}}]},"links":{"self":"http:\/\/localhost:2202\/api\/v1\/orders\/33"}},{"type":"order","id":34,"attributes":{"name":"alias id nisi","description":"Quibusdam rerum voluptatem non illum. Molestiae sint dolores earum cum. Non odit nobis repellat autem. Praesentium qui voluptas qui dolore iste ratione.","status":"C","date":"2013-10-08"},"relationships":{"products":[{"id":2,"name":"sapiente est eum","price":"62.89","stock":1,"created_at":"2025-02-24T21:08:56.000000Z","updated_at":"2025-02-27T00:30:28.000000Z","pivot":{"order_id":34,"product_id":2,"quantity":7,"created_at":"2025-02-24T21:08:58.000000Z","updated_at":"2025-02-24T21:08:58.000000Z"}},{"id":5,"name":"sapiente non impedit","price":"87.66","stock":8,"created_at":"2025-02-24T21:08:56.000000Z","updated_at":"2025-02-24T21:08:56.000000Z","pivot":{"order_id":34,"product_id":5,"quantity":7,"created_at":"2025-02-24T21:08:58.000000Z","updated_at":"2025-02-24T21:08:58.000000Z"}},{"id":36,"name":"voluptatem dolorem harum","price":"58.27","stock":14,"created_at":"2025-02-24T21:08:56.000000Z","updated_at":"2025-02-24T21:08:56.000000Z","pivot":{"order_id":34,"product_id":36,"quantity":7,"created_at":"2025-02-24T21:08:58.000000Z","updated_at":"2025-02-24T21:08:58.000000Z"}}]},"links":{"self":"http:\/\/localhost:2202\/api\/v1\/orders\/34"}},{"type":"order","id":39,"attributes":{"name":"dolore autem consectetur","description":"Ut et aperiam repudiandae provident sed est dolor. Molestias libero sint voluptatem odit dolor. Dolore ullam nemo reiciendis odit.","status":"F","date":"2013-09-26"},"relationships":{"products":[{"id":9,"name":"corrupti cum distinctio","price":"4.69","stock":23,"created_at":"2025-02-24T21:08:56.000000Z","updated_at":"2025-02-24T21:08:56.000000Z","pivot":{"order_id":39,"product_id":9,"quantity":3,"created_at":"2025-02-24T21:08:58.000000Z","updated_at":"2025-02-24T21:08:58.000000Z"}},{"id":28,"name":"rem ut qui","price":"28.15","stock":13,"created_at":"2025-02-24T21:08:56.000000Z","updated_at":"2025-02-24T21:08:56.000000Z","pivot":{"order_id":39,"product_id":28,"quantity":2,"created_at":"2025-02-24T21:08:58.000000Z","updated_at":"2025-02-24T21:08:58.000000Z"}}]},"links":{"self":"http:\/\/localhost:2202\/api\/v1\/orders\/39"}},{"type":"order","id":46,"attributes":{"name":"quas est fugiat","description":"Occaecati repudiandae iusto possimus non. Consectetur nisi quidem magni modi ad vitae molestiae. Repellendus est ut ut.","status":"F","date":"1976-10-14"},"relationships":{"products":[{"id":13,"name":"pariatur rem exercitationem","price":"90.65","stock":13,"created_at":"2025-02-24T21:08:56.000000Z","updated_at":"2025-02-24T21:08:56.000000Z","pivot":{"order_id":46,"product_id":13,"quantity":3,"created_at":"2025-02-24T21:08:58.000000Z","updated_at":"2025-02-24T21:08:58.000000Z"}},{"id":20,"name":"iure quasi molestiae","price":"57.57","stock":10,"created_at":"2025-02-24T21:08:56.000000Z","updated_at":"2025-02-24T21:08:56.000000Z","pivot":{"order_id":46,"product_id":20,"quantity":4,"created_at":"2025-02-24T21:08:58.000000Z","updated_at":"2025-02-24T21:08:58.000000Z"}},{"id":30,"name":"quibusdam tempore culpa","price":"39.76","stock":5,"created_at":"2025-02-24T21:08:56.000000Z","updated_at":"2025-02-24T21:08:56.000000Z","pivot":{"order_id":46,"product_id":30,"quantity":7,"created_at":"2025-02-24T21:08:58.000000Z","updated_at":"2025-02-24T21:08:58.000000Z"}},{"id":32,"name":"rerum doloribus voluptatem","price":"94.83","stock":20,"created_at":"2025-02-24T21:08:56.000000Z","updated_at":"2025-02-24T21:08:56.000000Z","pivot":{"order_id":46,"product_id":32,"quantity":6,"created_at":"2025-02-24T21:08:58.000000Z","updated_at":"2025-02-24T21:08:58.000000Z"}},{"id":44,"name":"voluptas inventore non","price":"13.36","stock":6,"created_at":"2025-02-24T21:08:56.000000Z","updated_at":"2025-02-24T21:08:56.000000Z","pivot":{"order_id":46,"product_id":44,"quantity":3,"created_at":"2025-02-24T21:08:58.000000Z","updated_at":"2025-02-24T21:08:58.000000Z"}}]},"links":{"self":"http:\/\/localhost:2202\/api\/v1\/orders\/46"}},{"type":"order","id":53,"attributes":{"name":"autem consectetur ullam","description":"Nemo tempore optio a modi. Nemo qui voluptate aut exercitationem fuga. Non aut vitae reiciendis aut qui ipsam aperiam reprehenderit. Deserunt pariatur similique quae molestiae praesentium ullam.","status":"F","date":"1987-12-23"},"relationships":{"products":[{"id":1,"name":"ex sapiente beatae","price":"98.17","stock":0,"created_at":"2025-02-24T21:08:56.000000Z","updated_at":"2025-02-27T00:30:28.000000Z","pivot":{"order_id":53,"product_id":1,"quantity":2,"created_at":"2025-02-24T21:08:59.000000Z","updated_at":"2025-02-24T21:08:59.000000Z"}},{"id":8,"name":"quia corrupti aliquid","price":"58.70","stock":5,"created_at":"2025-02-24T21:08:56.000000Z","updated_at":"2025-02-24T21:08:56.000000Z","pivot":{"order_id":53,"product_id":8,"quantity":2,"created_at":"2025-02-24T21:08:59.000000Z","updated_at":"2025-02-24T21:08:59.000000Z"}},{"id":17,"name":"ut eum odio","price":"11.36","stock":7,"created_at":"2025-02-24T21:08:56.000000Z","updated_at":"2025-02-24T21:08:56.000000Z","pivot":{"order_id":53,"product_id":17,"quantity":2,"created_at":"2025-02-24T21:08:59.000000Z","updated_at":"2025-02-24T21:08:59.000000Z"}},{"id":18,"name":"veritatis ipsum amet","price":"30.10","stock":22,"created_at":"2025-02-24T21:08:56.000000Z","updated_at":"2025-02-24T21:08:56.000000Z","pivot":{"order_id":53,"product_id":18,"quantity":4,"created_at":"2025-02-24T21:08:59.000000Z","updated_at":"2025-02-24T21:08:59.000000Z"}},{"id":40,"name":"quas hic veritatis","price":"92.55","stock":6,"created_at":"2025-02-24T21:08:56.000000Z","updated_at":"2025-02-24T21:08:56.000000Z","pivot":{"order_id":53,"product_id":40,"quantity":1,"created_at":"2025-02-24T21:08:59.000000Z","updated_at":"2025-02-24T21:08:59.000000Z"}},{"id":42,"name":"et et et","price":"62.62","stock":17,"created_at":"2025-02-24T21:08:56.000000Z","updated_at":"2025-02-24T21:08:56.000000Z","pivot":{"order_id":53,"product_id":42,"quantity":1,"created_at":"2025-02-24T21:08:59.000000Z","updated_at":"2025-02-24T21:08:59.000000Z"}},{"id":44,"name":"voluptas inventore non","price":"13.36","stock":6,"created_at":"2025-02-24T21:08:56.000000Z","updated_at":"2025-02-24T21:08:56.000000Z","pivot":{"order_id":53,"product_id":44,"quantity":4,"created_at":"2025-02-24T21:08:59.000000Z","updated_at":"2025-02-24T21:08:59.000000Z"}},{"id":46,"name":"et quisquam eligendi","price":"30.14","stock":3,"created_at":"2025-02-24T21:08:57.000000Z","updated_at":"2025-02-24T21:08:57.000000Z","pivot":{"order_id":53,"product_id":46,"quantity":2,"created_at":"2025-02-24T21:08:59.000000Z","updated_at":"2025-02-24T21:08:59.000000Z"}}]},"links":{"self":"http:\/\/localhost:2202\/api\/v1\/orders\/53"}},{"type":"order","id":61,"attributes":{"name":"MacKenzie Blackwell","description":"Laudantium ullamco","status":"F","date":"1997-01-13"},"relationships":{"products":[{"id":4,"name":"et praesentium nesciunt","price":"38.45","stock":4,"created_at":"2025-02-24T21:08:56.000000Z","updated_at":"2025-02-24T21:08:56.000000Z","pivot":{"order_id":61,"product_id":4,"quantity":4,"created_at":"2025-02-24T21:18:21.000000Z","updated_at":"2025-02-24T21:18:21.000000Z"}}]},"links":{"self":"http:\/\/localhost:2202\/api\/v1\/orders\/61"}},{"type":"order","id":62,"attributes":{"name":"Chelsea Rollins","description":"Esse magna repudiand","status":"P","date":"2023-04-01"},"relationships":{"products":[{"id":1,"name":"ex sapiente beatae","price":"98.17","stock":0,"created_at":"2025-02-24T21:08:56.000000Z","updated_at":"2025-02-27T00:30:28.000000Z","pivot":{"order_id":62,"product_id":1,"quantity":3,"created_at":"2025-02-24T22:26:08.000000Z","updated_at":"2025-02-24T22:26:08.000000Z"}},{"id":4,"name":"et praesentium nesciunt","price":"38.45","stock":4,"created_at":"2025-02-24T21:08:56.000000Z","updated_at":"2025-02-24T21:08:56.000000Z","pivot":{"order_id":62,"product_id":4,"quantity":2,"created_at":"2025-02-24T22:26:08.000000Z","updated_at":"2025-02-24T22:26:08.000000Z"}},{"id":8,"name":"quia corrupti aliquid","price":"58.70","stock":5,"created_at":"2025-02-24T21:08:56.000000Z","updated_at":"2025-02-24T21:08:56.000000Z","pivot":{"order_id":62,"product_id":8,"quantity":4,"created_at":"2025-02-24T22:26:08.000000Z","updated_at":"2025-02-24T22:26:08.000000Z"}}]},"links":{"self":"http:\/\/localhost:2202\/api\/v1\/orders\/62"}},{"type":"order","id":68,"attributes":{"name":"modi quo voluptas","description":"Et dolorem natus ipsam soluta eveniet nihil. Soluta autem est atque in. Omnis velit iure expedita quo.","status":"F","date":"1995-05-01"},"relationships":{"products":[{"id":1,"name":"ex sapiente beatae","price":"98.17","stock":0,"created_at":"2025-02-24T21:08:56.000000Z","updated_at":"2025-02-27T00:30:28.000000Z","pivot":{"order_id":68,"product_id":1,"quantity":7,"created_at":"2025-02-26T20:18:13.000000Z","updated_at":"2025-02-26T20:18:13.000000Z"}},{"id":2,"name":"sapiente est eum","price":"62.89","stock":1,"created_at":"2025-02-24T21:08:56.000000Z","updated_at":"2025-02-27T00:30:28.000000Z","pivot":{"order_id":68,"product_id":2,"quantity":5,"created_at":"2025-02-26T20:18:13.000000Z","updated_at":"2025-02-26T20:18:13.000000Z"}}]},"links":{"self":"http:\/\/localhost:2202\/api\/v1\/orders\/68"}},{"type":"order","id":69,"attributes":{"name":"modi quo voluptas","description":"Et dolorem natus ipsam soluta eveniet nihil. Soluta autem est atque in. Omnis velit iure expedita quo.","status":"F","date":"1995-05-01"},"relationships":{"products":[{"id":1,"name":"ex sapiente beatae","price":"98.17","stock":0,"created_at":"2025-02-24T21:08:56.000000Z","updated_at":"2025-02-27T00:30:28.000000Z","pivot":{"order_id":69,"product_id":1,"quantity":5,"created_at":"2025-02-26T22:36:18.000000Z","updated_at":"2025-02-26T22:36:18.000000Z"}},{"id":2,"name":"sapiente est eum","price":"62.89","stock":1,"created_at":"2025-02-24T21:08:56.000000Z","updated_at":"2025-02-27T00:30:28.000000Z","pivot":{"order_id":69,"product_id":2,"quantity":5,"created_at":"2025-02-26T22:36:18.000000Z","updated_at":"2025-02-26T22:36:18.000000Z"}}]},"links":{"self":"http:\/\/localhost:2202\/api\/v1\/orders\/69"}},{"type":"order","id":70,"attributes":{"name":"modi quo voluptas","description":"Et dolorem natus ipsam soluta eveniet nihil. Soluta autem est atque in. Omnis velit iure expedita quo.","status":"F","date":"1995-05-01"},"relationships":{"products":[{"id":1,"name":"ex sapiente beatae","price":"98.17","stock":0,"created_at":"2025-02-24T21:08:56.000000Z","updated_at":"2025-02-27T00:30:28.000000Z","pivot":{"order_id":70,"product_id":1,"quantity":5,"created_at":"2025-02-26T22:37:44.000000Z","updated_at":"2025-02-26T22:37:44.000000Z"}},{"id":2,"name":"sapiente est eum","price":"62.89","stock":1,"created_at":"2025-02-24T21:08:56.000000Z","updated_at":"2025-02-27T00:30:28.000000Z","pivot":{"order_id":70,"product_id":2,"quantity":5,"created_at":"2025-02-26T22:37:44.000000Z","updated_at":"2025-02-26T22:37:44.000000Z"}}]},"links":{"self":"http:\/\/localhost:2202\/api\/v1\/orders\/70"}},{"type":"order","id":71,"attributes":{"name":"modi quo voluptas","description":"Et dolorem natus ipsam soluta eveniet nihil. Soluta autem est atque in. Omnis velit iure expedita quo.","status":"F","date":"1995-05-01"},"relationships":{"products":[{"id":1,"name":"ex sapiente beatae","price":"98.17","stock":0,"created_at":"2025-02-24T21:08:56.000000Z","updated_at":"2025-02-27T00:30:28.000000Z","pivot":{"order_id":71,"product_id":1,"quantity":5,"created_at":"2025-02-26T22:37:47.000000Z","updated_at":"2025-02-26T22:37:47.000000Z"}},{"id":2,"name":"sapiente est eum","price":"62.89","stock":1,"created_at":"2025-02-24T21:08:56.000000Z","updated_at":"2025-02-27T00:30:28.000000Z","pivot":{"order_id":71,"product_id":2,"quantity":5,"created_at":"2025-02-26T22:37:47.000000Z","updated_at":"2025-02-26T22:37:47.000000Z"}}]},"links":{"self":"http:\/\/localhost:2202\/api\/v1\/orders\/71"}},{"type":"order","id":72,"attributes":{"name":"modi quo voluptas","description":"Et dolorem natus ipsam soluta eveniet nihil. Soluta autem est atque in. Omnis velit iure expedita quo.","status":"F","date":"1995-05-01"},"relationships":{"products":[{"id":1,"name":"ex sapiente beatae","price":"98.17","stock":0,"created_at":"2025-02-24T21:08:56.000000Z","updated_at":"2025-02-27T00:30:28.000000Z","pivot":{"order_id":72,"product_id":1,"quantity":2,"created_at":"2025-02-26T22:51:25.000000Z","updated_at":"2025-02-26T22:51:25.000000Z"}},{"id":2,"name":"sapiente est eum","price":"62.89","stock":1,"created_at":"2025-02-24T21:08:56.000000Z","updated_at":"2025-02-27T00:30:28.000000Z","pivot":{"order_id":72,"product_id":2,"quantity":1,"created_at":"2025-02-26T22:51:25.000000Z","updated_at":"2025-02-26T22:51:25.000000Z"}}]},"links":{"self":"http:\/\/localhost:2202\/api\/v1\/orders\/72"}},{"type":"order","id":77,"attributes":{"name":"modi quo voluptas","description":"Et dolorem natus ipsam soluta eveniet nihil. Soluta autem est atque in. Omnis velit iure expedita quo.","status":"F","date":"1995-05-01"},"relationships":{"products":[{"id":1,"name":"ex sapiente beatae","price":"98.17","stock":0,"created_at":"2025-02-24T21:08:56.000000Z","updated_at":"2025-02-27T00:30:28.000000Z","pivot":{"order_id":77,"product_id":1,"quantity":2,"created_at":"2025-02-27T00:30:28.000000Z","updated_at":"2025-02-27T00:30:28.000000Z"}},{"id":2,"name":"sapiente est eum","price":"62.89","stock":1,"created_at":"2025-02-24T21:08:56.000000Z","updated_at":"2025-02-27T00:30:28.000000Z","pivot":{"order_id":77,"product_id":2,"quantity":1,"created_at":"2025-02-27T00:30:28.000000Z","updated_at":"2025-02-27T00:30:28.000000Z"}}]},"links":{"self":"http:\/\/localhost:2202\/api\/v1\/orders\/77"}}],"links":{"self":"http:\/\/localhost:2202\/api\/v1\/orders"},"meta":{"version":"0.1.0","author":"Diaa Mohammad"}}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          access-control-allow-origin: '*'
+        description: null
+        custom: []
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 11|IBU2fQr1XbcQGjMC4GRgGvc4TyeE4LVdR57h9lrr372ee8b6'
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - GET
+    uri: 'api/v1/orders/{id}'
+    metadata:
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Display the specified resource.'
+      description: ''
+      authenticated: true
+      custom: []
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        name: id
+        description: 'The ID of the order.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+    cleanUrlParameters:
+      id: 1
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 401
+        content: '{"errors":"You are not authorized","status":401}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          access-control-allow-origin: '*'
+        description: null
+        custom: []
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 11|IBU2fQr1XbcQGjMC4GRgGvc4TyeE4LVdR57h9lrr372ee8b6'
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - DELETE
+    uri: 'api/v1/orders/{id}'
+    metadata:
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Remove the specified resource from storage.'
+      description: ''
+      authenticated: true
+      custom: []
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        name: id
+        description: 'The ID of the order.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+    cleanUrlParameters:
+      id: 1
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 11|IBU2fQr1XbcQGjMC4GRgGvc4TyeE4LVdR57h9lrr372ee8b6'
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - GET
+    uri: api/v1/products
+    metadata:
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Display a listing of the resource.'
+      description: ''
+      authenticated: true
+      custom: []
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: '{"data":[{"type":"product","id":1,"attributes":{"name":"ex sapiente beatae","price":"98.17","stock":0},"links":{"self":"todo"}},{"type":"product","id":2,"attributes":{"name":"sapiente est eum","price":"62.89","stock":1},"links":{"self":"todo"}},{"type":"product","id":3,"attributes":{"name":"autem doloremque iure","price":"50.51","stock":0},"links":{"self":"todo"}},{"type":"product","id":4,"attributes":{"name":"et praesentium nesciunt","price":"38.45","stock":4},"links":{"self":"todo"}},{"type":"product","id":5,"attributes":{"name":"sapiente non impedit","price":"87.66","stock":8},"links":{"self":"todo"}},{"type":"product","id":6,"attributes":{"name":"maxime dolores ut","price":"9.03","stock":6},"links":{"self":"todo"}},{"type":"product","id":7,"attributes":{"name":"ipsum commodi eos","price":"53.81","stock":10},"links":{"self":"todo"}},{"type":"product","id":8,"attributes":{"name":"quia corrupti aliquid","price":"58.70","stock":5},"links":{"self":"todo"}},{"type":"product","id":9,"attributes":{"name":"corrupti cum distinctio","price":"4.69","stock":23},"links":{"self":"todo"}},{"type":"product","id":10,"attributes":{"name":"aperiam qui et","price":"98.42","stock":4},"links":{"self":"todo"}},{"type":"product","id":11,"attributes":{"name":"consequatur possimus aut","price":"62.55","stock":24},"links":{"self":"todo"}},{"type":"product","id":12,"attributes":{"name":"beatae qui corrupti","price":"25.81","stock":21},"links":{"self":"todo"}},{"type":"product","id":13,"attributes":{"name":"pariatur rem exercitationem","price":"90.65","stock":13},"links":{"self":"todo"}},{"type":"product","id":14,"attributes":{"name":"qui placeat molestiae","price":"39.33","stock":9},"links":{"self":"todo"}},{"type":"product","id":15,"attributes":{"name":"doloremque et quia","price":"54.72","stock":11},"links":{"self":"todo"}},{"type":"product","id":16,"attributes":{"name":"ea libero dolores","price":"45.40","stock":21},"links":{"self":"todo"}},{"type":"product","id":17,"attributes":{"name":"ut eum odio","price":"11.36","stock":7},"links":{"self":"todo"}},{"type":"product","id":18,"attributes":{"name":"veritatis ipsum amet","price":"30.10","stock":22},"links":{"self":"todo"}},{"type":"product","id":19,"attributes":{"name":"facere provident excepturi","price":"72.15","stock":9},"links":{"self":"todo"}},{"type":"product","id":20,"attributes":{"name":"iure quasi molestiae","price":"57.57","stock":10},"links":{"self":"todo"}},{"type":"product","id":21,"attributes":{"name":"et explicabo vel","price":"94.20","stock":22},"links":{"self":"todo"}},{"type":"product","id":22,"attributes":{"name":"nostrum ea aut","price":"57.83","stock":4},"links":{"self":"todo"}},{"type":"product","id":23,"attributes":{"name":"illum sunt consequatur","price":"57.88","stock":21},"links":{"self":"todo"}},{"type":"product","id":24,"attributes":{"name":"consequatur nobis sunt","price":"6.45","stock":9},"links":{"self":"todo"}},{"type":"product","id":25,"attributes":{"name":"qui ut sed","price":"93.72","stock":23},"links":{"self":"todo"}},{"type":"product","id":26,"attributes":{"name":"fugit ut cum","price":"71.37","stock":12},"links":{"self":"todo"}},{"type":"product","id":27,"attributes":{"name":"officia est ipsa","price":"57.63","stock":23},"links":{"self":"todo"}},{"type":"product","id":28,"attributes":{"name":"rem ut qui","price":"28.15","stock":13},"links":{"self":"todo"}},{"type":"product","id":29,"attributes":{"name":"quis eligendi possimus","price":"50.97","stock":16},"links":{"self":"todo"}},{"type":"product","id":30,"attributes":{"name":"quibusdam tempore culpa","price":"39.76","stock":5},"links":{"self":"todo"}},{"type":"product","id":31,"attributes":{"name":"deleniti natus iure","price":"28.77","stock":5},"links":{"self":"todo"}},{"type":"product","id":32,"attributes":{"name":"rerum doloribus voluptatem","price":"94.83","stock":20},"links":{"self":"todo"}},{"type":"product","id":33,"attributes":{"name":"voluptatum temporibus fuga","price":"24.56","stock":18},"links":{"self":"todo"}},{"type":"product","id":34,"attributes":{"name":"vero dolor nostrum","price":"66.95","stock":18},"links":{"self":"todo"}},{"type":"product","id":35,"attributes":{"name":"culpa aut aspernatur","price":"31.71","stock":20},"links":{"self":"todo"}},{"type":"product","id":36,"attributes":{"name":"voluptatem dolorem harum","price":"58.27","stock":14},"links":{"self":"todo"}},{"type":"product","id":37,"attributes":{"name":"unde vitae commodi","price":"21.10","stock":16},"links":{"self":"todo"}},{"type":"product","id":38,"attributes":{"name":"fugit quos neque","price":"47.15","stock":3},"links":{"self":"todo"}},{"type":"product","id":39,"attributes":{"name":"quis ut dolore","price":"13.13","stock":6},"links":{"self":"todo"}},{"type":"product","id":40,"attributes":{"name":"quas hic veritatis","price":"92.55","stock":6},"links":{"self":"todo"}},{"type":"product","id":41,"attributes":{"name":"aperiam occaecati aspernatur","price":"3.05","stock":15},"links":{"self":"todo"}},{"type":"product","id":42,"attributes":{"name":"et et et","price":"62.62","stock":17},"links":{"self":"todo"}},{"type":"product","id":43,"attributes":{"name":"omnis architecto enim","price":"58.99","stock":13},"links":{"self":"todo"}},{"type":"product","id":44,"attributes":{"name":"voluptas inventore non","price":"13.36","stock":6},"links":{"self":"todo"}},{"type":"product","id":45,"attributes":{"name":"corporis et aspernatur","price":"34.51","stock":16},"links":{"self":"todo"}},{"type":"product","id":46,"attributes":{"name":"et quisquam eligendi","price":"30.14","stock":3},"links":{"self":"todo"}},{"type":"product","id":47,"attributes":{"name":"qui quidem nemo","price":"23.48","stock":7},"links":{"self":"todo"}},{"type":"product","id":48,"attributes":{"name":"sint voluptates voluptas","price":"52.47","stock":9},"links":{"self":"todo"}},{"type":"product","id":49,"attributes":{"name":"quidem inventore fugit","price":"52.27","stock":8},"links":{"self":"todo"}},{"type":"product","id":50,"attributes":{"name":"et molestiae temporibus","price":"89.57","stock":4},"links":{"self":"todo"}}],"meta":{"version":"0.1.0","author":"Diaa Mohammad"}}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          access-control-allow-origin: '*'
+        description: null
+        custom: []
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 11|IBU2fQr1XbcQGjMC4GRgGvc4TyeE4LVdR57h9lrr372ee8b6'
+    controller: null
+    method: null
+    route: null
+    custom: []

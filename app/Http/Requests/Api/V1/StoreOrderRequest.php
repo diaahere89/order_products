@@ -22,21 +22,14 @@ class StoreOrderRequest extends BaseOrderRequest
      */
     public function rules(): array
     {
+        $user = $this->user();
+
         return [
             'data' => 'required|array',
             'data.attributes' => 'required|array',
             'data.relationships' => 'required|array',
             
-            'data.attributes.user_id' => [
-                'required',
-                'exists:users,id',
-                'integer',
-                function ($attribute, $value, $fail) {
-                    if (Auth::user()->id !== $value) {
-                        $fail('User is not authorized to create an order for another user.');
-                    }
-                },
-            ],
+            'data.attributes.user_id' => 'required|integer|exists:users,id|size:' . $user->id,
             'data.attributes.name' => 'required|string',
             'data.attributes.description' => 'required|string',
             'data.attributes.status' => 'required|string|in:P,F,C',

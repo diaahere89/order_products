@@ -191,28 +191,34 @@ To run the unit tests, use the following command:
 ---
 
 ## API Documentation
-<!-- 
-The API endpoints are documented using **Postman**. You can access the documentation at:
-- **Postman Collection**: [Download Postman Collection](https://documenter.getpostman.com/view/10642536/2sAYXCmKYK) 
--->
+The API endpoints are documented using **Scribe**. You should have your Laravel Sail up and running, then access the documentation at: `http://localhost:3020/docs`.
 
 ### Available Endpoints
 
 #### Orders
-- **GET /api/v1/orders**: List all orders.
+- **GET|HEAD /api/v1/orders**: List all orders.
 - **POST /api/v1/orders**: Create a new order.
-- **GET /api/v1/orders/{id}**: Get details of a specific order.
-- **DELETE /api/v1/orders/{id}**: Delete an order.
-- **PUT/PATCH /api/v1/orders/{id}**: Replace/Update an existing order.
+- **GET|HEAD /api/v1/orders/{order}**: Get details of a specific order.
+- **DELETE /api/v1/orders/{order}**: Delete an order.
+- **PUT/PATCH /api/v1/orders/{order}**: Replace/Update an existing order.
 
 #### Products
-- **GET /api/v1/products**: List all products.
+- **GET|HEAD /api/v1/products**: List all products.
 
 #### Authentication
 - **POST /api/login**: Authenticate a user and retrieve an access token.
 - **POST /api/logout**: Revoke the user's access token.
-<!-- - **POST /api/register**: Register a new user. -->
+- **GET|HEAD /api/user**: Retrieve the authenticated user's details.
+- **GET|HEAD /api/v1/user**: Retrieve the authenticated user's details.
 
+
+#### API documentation
+- **GET|HEAD /docs**: API documentation by Scribe.
+- **GET|HEAD /docs.openapi**: OpenAPI documentation by Scribe (OpenAPI 3.0).
+- **GET|HEAD /docs.postman**: OpenAPI documentation by Scribe (Postman).
+- **GET|HEAD /api**: API entry point.
+
+- **GET|HEAD /**: Web application entry point.
 ---
 
 ## Troubleshooting

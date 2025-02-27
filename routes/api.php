@@ -13,7 +13,7 @@ Route::get('/user', function (Request $request) {
 
 Route::get('/', function () {
     return response()->json([
-        'message' => 'Hello API!',
+        'message' => 'Order Stock Management API!',
         'status' => 200,
     ], 200);
 });
