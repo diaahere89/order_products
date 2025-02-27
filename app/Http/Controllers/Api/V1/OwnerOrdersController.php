@@ -40,9 +40,9 @@ class OwnerOrdersController extends ApiController
                 Order::where('user_id', $ownerId)->filter( $filter )->paginate()
             ), Response::HTTP_OK );
         } catch (ModelNotFoundException $eModelNotFound) {
-            return $this->error( 'User not found', Response::HTTP_NOT_FOUND );
+            return $this->notFound( 'User not found' );
         } catch (AuthorizationException $eAuthorizationException) {
-            return $this->error( 'You are not authorized.'  , Response::HTTP_UNAUTHORIZED );
+            return $this->notAuthorized();
         }
     }
 
@@ -64,9 +64,9 @@ class OwnerOrdersController extends ApiController
     
             return response()->json( new OrderResource($order), Response::HTTP_OK );
         } catch (ModelNotFoundException $eModelNotFound) {
-            return $this->error( 'User/Order not found', Response::HTTP_NOT_FOUND );
+            return $this->notFound( 'User/Order not found' );
         } catch (AuthorizationException $eAuthorizationException) {
-            return $this->error( 'You are not authorized', Response::HTTP_UNAUTHORIZED );
+            return $this->notAuthorized();
         }
     }
 
@@ -81,15 +81,15 @@ class OwnerOrdersController extends ApiController
             $order = $this->orderService->createOrderHandleProducts( $request );
             return response()->json( new OrderResource($order), Response::HTTP_CREATED );
         } catch (ModelNotFoundException $eModelNotFound) {
-            return $this->error( 'User/Order not found', Response::HTTP_NOT_FOUND );
+            return $this->notFound( 'User/Order not found' );
         } catch (AuthorizationException $eAuthorizationException) {
-            return $this->error( 'You are not authorized', Response::HTTP_UNAUTHORIZED );
+            return $this->notAuthorized();
         } catch (QueryException $eQueryException) {
             DB::rollback(); // Rollback transaction on database error
-            return $this->error( 'Database error', Response::HTTP_INTERNAL_SERVER_ERROR );
+            return $this->dbError();
         } catch (Throwable $eTh) {
             DB::rollback(); // Rollback transaction on any other error
-            return $this->error( 'An unexpected error occurred', Response::HTTP_INTERNAL_SERVER_ERROR );
+            return $this->unexpectedError();
         }
     }
 
@@ -115,9 +115,9 @@ class OwnerOrdersController extends ApiController
                 'status' => Response::HTTP_OK
             ]);
         } catch (ModelNotFoundException $eModelNotFound) {
-            return $this->error( 'Order not found', Response::HTTP_NOT_FOUND );
+            return $this->notFound( 'User/Order not found' );
         } catch (AuthorizationException $eAuthorizationException) {
-            return $this->error( 'You are not authorized', Response::HTTP_UNAUTHORIZED );
+            return $this->notAuthorized();
         }
     }
 }

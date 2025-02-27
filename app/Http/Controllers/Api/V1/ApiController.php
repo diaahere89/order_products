@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Traits\V1\ApiResponses;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Http\Response;
 
 class ApiController extends Controller
 {
@@ -43,6 +44,27 @@ class ApiController extends Controller
     {
         $this->authIsOwner($ownerId);
         return $this->isAble($ability, $model);
+    }
+
+
+    public function notAuthorized( string $message = 'You are not authorized.' )
+    {
+        return $this->error( $message, Response::HTTP_UNAUTHORIZED );
+    }
+
+    public function notFound( string $message = 'Not Found.' )
+    {
+        return $this->error( $message, Response::HTTP_NOT_FOUND );
+    }
+
+    public function unexpectedError( string $message = 'An unexpected error occurred.' )
+    {
+        return $this->error( $message, Response::HTTP_INTERNAL_SERVER_ERROR );
+    }
+
+    public function dbError( string $message = 'Database error.' )
+    {
+        return $this->error( $message, Response::HTTP_INTERNAL_SERVER_ERROR );
     }
 
 }
