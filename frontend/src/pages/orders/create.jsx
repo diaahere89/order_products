@@ -89,7 +89,7 @@ export default function CreateOrder() {
         const data = await res.json();
         
         if (res.ok) {
-            navigate('/orders');
+            navigate(`/orders/${data.id}`);
         } else {
             setErrors(data.errors);
         }

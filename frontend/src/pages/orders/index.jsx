@@ -26,7 +26,7 @@ export default function Orders () {
     };
 
     async function getOrders() {
-        const res = await fetch('/api/v1/orders?include=user', {
+        const res = await fetch('/api/v1/orders?include=user&sortByDesc=id', {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${token}`,

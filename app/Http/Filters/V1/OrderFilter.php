@@ -34,4 +34,24 @@ class OrderFilter extends QueryFilter
         return $this->builder->where('description', 'like', $like_str);
     }
 
+    public function sortByDesc( $value )
+    {
+        return $this->builder->orderBy($value, 'desc');
+    }
+
+    public function sortByAsc( $value )
+    {
+        return $this->builder->orderBy($value, 'asc');
+    }
+
+    public function limit( $value )
+    {
+        return $this->builder->limit($value);
+    }
+
+    public function offset( $value )
+    {
+        return $this->builder->offset($value);
+    }
+
 }

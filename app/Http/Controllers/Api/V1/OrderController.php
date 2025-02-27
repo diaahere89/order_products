@@ -23,8 +23,9 @@ class OrderController extends ApiController
 {
     protected $policyClass = OrderPolicy::class;
 
-    public function __construct( protected OrdersService $orderService )
-    {}
+    public function __construct( 
+        protected OrdersService $orderService 
+    ) {}
 
     /**
      * Display a listing of the resource.
