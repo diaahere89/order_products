@@ -8,9 +8,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 
-// http://localhost:2202/api/v1/orders/{id}
-// universal resource locator 
-
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', function (Request $request) {
         return $request->user();
@@ -25,5 +22,3 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('owners', OrderOwnerController::class);
     Route::apiResource('owners.orders', OwnerOrdersController::class);
 });
-
-//Route::apiResource('orders', OrderController::class);

@@ -4,13 +4,7 @@ use App\Http\Controllers\Api\AuthController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');
-
-// http://localhost:2202/api/v1/orders/{id}
-// universal resource locator 
-
+/* APP_URL/api/ */ 
 Route::get('/', function () {
     return response()->json([
         'message' => 'Order Stock Management API!',
@@ -18,10 +12,17 @@ Route::get('/', function () {
     ], 200);
 });
 
+/* APP_URL/api/login APP_URL/api/logout APP_URL/api/user */ 
 Route::post('/login', [AuthController::class, 'login']);
-Route::middleware('auth:sanctum')->post('/logout', [AuthController::class, 'logout']);
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/logout', [AuthController::class, 'logout']);
+    Route::get('/user', function (Request $request) {
+        return $request->user();
+    });
+});
 
-// Versioned API routes
+
+/* Versioned API routes: APP_URL/api/v1/ */ 
 Route::prefix('v1')->group(function () {
     require __DIR__.'/api_v1.php';
 });

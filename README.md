@@ -191,7 +191,7 @@ To run the unit tests, use the following command:
 ---
 
 ## API Documentation
-The API endpoints are documented using **Scribe**. You should have your Laravel Sail up and running, then access the documentation at: `http://localhost:3020/docs`.
+The API endpoints are documented using **Scribe**. You should have your Laravel Sail up and running, then access the documentation at: `http://localhost:2202/docs`.
 
 ### Available Endpoints
 
