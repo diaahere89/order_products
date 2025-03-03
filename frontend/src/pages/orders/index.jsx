@@ -13,6 +13,7 @@ export default function Orders () {
     const [ filterStatus, setFilterStatus ] = useState('all');
     const [ filterDate, setFilterDate ] = useState('');
     const [ filterDateTo, setFilterDateTo ] = useState('');
+    const [ filterSortBy, setFilterSortBy ] = useState('');
 
     const restoreFilters = () => {
         setFilterOrder('');
@@ -20,6 +21,7 @@ export default function Orders () {
         setFilterStatus('all');
         setFilterDate('');
         setFilterDateTo('');
+        setFilterSortBy('');
         document.querySelectorAll('input[type="text"]').forEach(input => input.value = '');
         document.querySelectorAll('input[type="date"]').forEach(input => input.value = '');
         document.querySelectorAll('select').forEach(select => select.selectedIndex = 0);
@@ -145,6 +147,25 @@ export default function Orders () {
                         Reset Dates
                     </button>
                 </div>
+
+                <div className="flex flex-col gap-2 ml-4 float-end">
+                    <label className="label">
+                        <span className="label-text">Sort By</span>
+                    </label>
+                    <select
+                        onChange={ (e) => setFilterSortBy(e.target.value) } 
+                        className="select select-bordered w-full max-w-xs">
+                            <option value="">No sorting</option>
+                            <option value="name">Name ASC</option>
+                            <option value="-name">Name DESC</option>
+                            <option value="description">Description ASC</option>
+                            <option value="-description">Description DESC</option>
+                            <option value="status">Status ASC</option>
+                            <option value="-status">Status DESC</option>
+                            <option value="date">Date ASC</option>
+                            <option value="-date">Date DESC</option>
+                    </select>
+                </div>
             </div>
 
         </div>
@@ -175,6 +196,35 @@ export default function Orders () {
                             : order_data.date <= filterDateTo );
                 
                 return productFound && orderFound && orderStatusFound && orderDateFound;
+            }).sort((a, b) => {
+                switch (filterSortBy) {
+                    case 'name':
+                        return a.attributes.name.localeCompare(b.attributes.name);
+
+                    case '-name':
+                        return b.attributes.name.localeCompare(a.attributes.name);
+
+                    case 'description':
+                        return a.attributes.description.localeCompare(b.attributes.description);
+
+                    case '-description':
+                        return b.attributes.description.localeCompare(a.attributes.description);
+
+                    case 'status':
+                        return a.attributes.status.localeCompare(b.attributes.status);
+
+                    case '-status':
+                        return b.attributes.status.localeCompare(a.attributes.status);
+
+                    case 'date':
+                        return new Date(a.attributes.date) - new Date(b.attributes.date);
+
+                    case '-date':
+                        return new Date(b.attributes.date) - new Date(a.attributes.date);
+                
+                    default:
+                        return 0;
+                }
             }).map(order => (
                 <div key={order.id} className="card w-full mb-8">
                 {/* Flex container for the title and buttons */}
