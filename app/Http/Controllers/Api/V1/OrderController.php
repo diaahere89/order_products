@@ -141,7 +141,7 @@ class OrderController extends ApiController
         try {
             $order = Order::findOrFail($order_id);
             $this->isAble('delete', $order); //policy
-            $order->delete();
+            $this->orderService->deleteOrderHandleProducts( $order );
             return $this->ok( 'Order deleted successfully', [
                 'status' => Response::HTTP_OK
             ]);

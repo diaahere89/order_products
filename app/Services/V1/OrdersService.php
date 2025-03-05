@@ -90,4 +90,26 @@ class OrdersService
         DB::commit(); // Commit transaction if everything succeeds
     }
 
+    public function deleteOrderHandleProducts( Order $order ) 
+    {
+        DB::beginTransaction(); // Start transaction
+
+        // Fetch current products with pivot data and lock for update
+        $currentProducts = $order->products()->lockForUpdate()->get()->keyBy('id');
+        
+        // Detach all products
+        $order->products()->detach();
+
+        // Increment stock for each product
+        foreach ($currentProducts as $productId => $product) {
+            $lockedProduct = Product::where('id', $productId)->lockForUpdate()->first();
+            $lockedProduct->increment('stock', $product->pivot->quantity);
+        }
+
+        // Delete order
+        $order->delete();
+
+        DB::commit(); // Commit transaction if everything succeeds
+    }
+
 }
